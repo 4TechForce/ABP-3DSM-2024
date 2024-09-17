@@ -1,0 +1,22 @@
+[
+{"CODIGO_PREPARACAO":"101","DESCRICAO":"Cru(a)"},
+{"CODIGO_PREPARACAO":"102","DESCRICAO":"Cozido(a)"},
+{"CODIGO_PREPARACAO":"103","DESCRICAO":"Grelhado(a)/brasa/churrasco"},
+{"CODIGO_PREPARACAO":"104","DESCRICAO":"Assado(a)"},
+{"CODIGO_PREPARACAO":"105","DESCRICAO":"Frito(a)"},
+{"CODIGO_PREPARACAO":"106","DESCRICAO":"Empanado(a)/à milanesa"}
+,
+{"CODIGO_PREPARACAO":"107","DESCRICAO":"Refogado(a)"},
+{"CODIGO_PREPARACAO":"108","DESCRICAO":"Molho vermelho"},
+{"CODIGO_PREPARACAO":"109","DESCRICAO":"Molho branco"},
+{"CODIGO_PREPARACAO":"110","DESCRICAO":"Ao alho e óleo"}
+,
+{"CODIGO_PREPARACAO":"111","DESCRICAO":"Com manteiga/óleo"}
+,
+{"CODIGO_PREPARACAO":"112","DESCRICAO":"Ao vinagrete"},
+{"CODIGO_PREPARACAO":"113","DESCRICAO":"Ensopado"},
+{"CODIGO_PREPARACAO":"114","DESCRICAO":"Mingau"},
+{"CODIGO_PREPARACAO":"115","DESCRICAO":"Sopa"},
+{"CODIGO_PREPARACAO":"199","DESCRICAO":"Não se aplica"}
+
+]
