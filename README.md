@@ -50,25 +50,41 @@ Nós da 4TechForce propomos a criação de uma aplicação web destinada ao regi
 
 <div align="center">
 
-| Requisito | Sprint | Prioridade | Estimativa |
-|:---------:|:------:|:----------:|:----------:|
-|   ****    |  ****  |    ****    |    ****    |
-|   ****    |  ****  |    ****    |    ****    |
-|   ****    |  ****  |    ****    |    ****    |
-|   ****    |  ****  |    ****    |    ****    |
+| Requisito | Sprint | Prioridade | 
+|:---------:|:------:|:----------:|
+|   Implementar autenticação de usuário   |  1  |    Alta   |   
+|   Implementar registro de ingestão de calorias    |  2  |    Alta    |  
+|   Registrar dados de peso, altura, e atividade física    |  2  |    Alta  | 
+|   Gerar relatório de acompanhamento de peso    |  3   |    Alta    | 
+|   Assegurar compatibilidade entre diferentes dispositivos    |  3  |   Média    | 
+|   Manter documentação atualizada no GitHub    |  2   |    Alta    | 
+|   Armazenamento e integração com MongoDB e SGBD   |  1   |    Alta    | 
+|   Desenvolver back-end em TypeScript e Node.js   |  1  |    Alta    | 
+|   Desenvolver front-end em React TypeScript com as telas descritas    |  2   |    Alta    | 
+|  Garantir desempenho adequado do sistema   |  2   |    Alta    | 
+
 
 </div>
+<br>
 
 <h3 align="center">User Story</h3>
 
 <div align="center">
 
-| **Requisitos** | **User Story** |
-|:--------------:|:--------------:|
-|     ****       |     ****       |
-|     ****       |     ****       |
-|     ****       |     ****       |
-|     ****       |     ****       |
+
+| **Requisitos**                                            | **User Story** |
+|:---------------------------------------------------------:|:--------------:|
+| Implementar autenticação de usuário                      | "Como usuário, quero autenticar-me no sistema, para que eu possa acessar minha conta de forma segura e personalizada." |
+| Implementar registro de ingestão de calorias              | "Como usuário, quero registrar a ingestão de calorias das minhas refeições, para que eu possa acompanhar e gerenciar minha dieta de maneira eficaz." |
+| Registrar dados de peso, altura e atividade física       | "Como usuário, quero registrar meus dados de peso, altura e frequência de atividade física, para que eu possa monitorar meu progresso e ajustar minha dieta e exercícios conforme necessário." |
+| Gerar relatório de acompanhamento de peso                | "Como usuário, quero gerar relatórios de acompanhamento do meu peso, para que eu possa visualizar meu progresso ao longo do tempo e fazer ajustes conforme necessário." |
+| Assegurar compatibilidade entre diferentes dispositivos  | "Como usuário, quero que o sistema seja compatível com diferentes dispositivos e tamanhos de tela, para que eu possa acessar o sistema de qualquer dispositivo sem problemas de visualização." |
+| Manter documentação atualizada no GitHub                 | "Como membro da equipe, quero ter acesso à documentação atualizada no GitHub, para que eu possa acompanhar o progresso do projeto e entender o estado atual do sistema." |
+| Armazenamento e integração com MongoDB e SGBD            | "Como desenvolvedor, quero configurar o armazenamento de dados usando MongoDB e integrá-lo ao sistema, para que eu possa garantir a persistência e recuperação adequada dos dados." |
+| Desenvolver back-end em TypeScript e Node.js              | "Como desenvolvedor, quero implementar o back-end do sistema utilizando TypeScript e Node.js, para que eu possa garantir que o sistema seja robusto, escalável e mantenha boas práticas de desenvolvimento." |
+| Desenvolver front-end em React TypeScript com as telas descritas | "Como usuário, quero ter uma interface de usuário desenvolvida em React TypeScript com as telas especificadas, para que eu possa interagir com o sistema de maneira intuitiva e eficiente." |
+| Garantir desempenho adequado do sistema                  | "Como usuário, quero que o sistema funcione de maneira rápida e eficiente, para que eu possa ter uma experiência de uso sem lentidão ou interrupções." |
+
 
 </div>
 <br>
@@ -80,7 +96,7 @@ Nós da 4TechForce propomos a criação de uma aplicação web destinada ao regi
 
 | Item | Funcionalidade |
 |:----:|:--------------:|
-|  1   | Wireframe      |
+|  1   | Protótipo  |
 |  2   | Tela de Login  |
 |  3   | Cadastro do usuário |
 
@@ -88,38 +104,21 @@ Nós da 4TechForce propomos a criação de uma aplicação web destinada ao regi
 
 | Tarefas              | Story Point |
 |:--------------------:|:-----------:|
-| Wireframe do produto  |             |
-| Tela de Login         |             |
-| Tela de Cadastro      |             |
-| Autenticação de Rotas |      1      |
-| Operações CRUD        |      1      |
-| Login                 |      1      |
-| Estrutura do Mongo    |             |
-| Back de comunicação   |             |
-| **Total Story Point** |             |
+| Criação das telas no figma com o design a ser utilizado pelo o website  |      13       |
+| Tela de Login e Cadastro para a apresentação|      2       |
+| Configuração do banco de dados |      8      |
+| Operações CRUD, autenticação de rotas e login   |      1       |
+| Criação do vídeo para apresentação |      2      |
+| **Total Story Point** |       26      |
 
 </div>
 <br>
 <br>
 
 ## Métrica do Time
-<img src="./docs/burndown.png">
+<p align="center">
+<img src="./front/assets/burndown/grafico-burndown-sprint1.PNG">
 </p>
-<br>
-<br>
-
-<h2 align="center">Retrospectiva da Sprint 1</h2>
-<div align="center">
-
-| O que funcionou | O que poderia mehorar |
-|:----:|:--------------:|
-|  **  | ** |
-|  **  | ** |
-|  **  | ** |
-
-
-
-
 <br>
 <br>
 
@@ -141,7 +140,9 @@ Nós da 4TechForce propomos a criação de uma aplicação web destinada ao regi
 <br>
 <span id="equipe"></span>
 
-## Equipe
+<div align="center">
+
+<h3 align="center">Equipe</h3>
 
 |    Função   |  Nome    |    GitHub     |
 | :----------: | :-----------------------|:------------------------------------------: |
@@ -149,7 +150,10 @@ Nós da 4TechForce propomos a criação de uma aplicação web destinada ao regi
 |   Scrum Master| Marcelly Cristini Santos de Souza |[GitHub](https://github.com/Marcelly-cris)|
 |   Dev Team| Jackson Rodrigo Costa Machado |[GitHub](https://github.com/jacksonrcmachado)|
 |   Dev Team| Ana Júlia Tette Lopes Afonso |[GitHub](https://github.com/AnaBarbancho)|
+
+</div>
 <br>
 
 [![Typing SVG](https://readme-typing-svg.herokuapp.com/?color=8AB364&size=50&center=true&vCenter=true&width=1000&lines=4TechForce)](https://git.io/typing-svg)
+
 
