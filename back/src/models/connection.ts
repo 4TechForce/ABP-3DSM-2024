@@ -1,6 +1,18 @@
 import mongoose from "mongoose";
+import dotenv from "dotenv";
 
-const uri = "mongodb://127.0.0.1:27017/pequenossabores";
+dotenv.config();
+
+// const uri = "mongodb://127.0.0.1:27017/pequenossabores";
+
+const uri = process.env.ACESS_MONGO as string;
+
+if (!uri) {
+    throw new Error("A URI do MongoDB não está definida no arquivo .env");
+  }
+
+// const uri = "mongodb+srv://4forcetech:blow3wAELLQVIlvX@4techforce0.ye1eg.mongodb.net/?retryWrites=true&w=majority&appName=4techforce0";
+
 export default function connect() {
    
     mongoose.connection.on("connected", () => console.log("connected"));
@@ -10,7 +22,7 @@ export default function connect() {
     mongoose.connection.on("disconnecting", () => console.log("disconnecting"));
     mongoose.connection.on("close", () => console.log("close"));
    
-    mongoose
+     mongoose
         .connect(uri, {
             serverSelectionTimeoutMS: 5000,
             maxPoolSize: 10,
@@ -19,6 +31,9 @@ export default function connect() {
         .catch((e) => {
             console.error("Erro ao conectar ao MongoDB:", e.message);
         });
+        
+        
+          
   
     process.on("SIGINT", async () => {
         try {
