@@ -5,6 +5,6 @@ import { validadeAcess } from "../middleware";
 const routes = Router();
 routes.post('/', validadeAcess ,controller.create);
 routes.get('/', controller.list);
-routes.delete('/', controller.delete);
-routes.put('/', controller.update);
+routes.delete('/deleteProfile/:id', controller.delete);
+routes.put('/profile/:id', controller.update);
 export default routes;

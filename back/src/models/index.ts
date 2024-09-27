@@ -62,4 +62,7 @@ const UserSchema = new Schema({
 });
 
 const User = mongoose.model("User", UserSchema, "user");
+
+//const anotherDb = mongoose.connection.useDb('outroBanco');
+
 export { User };

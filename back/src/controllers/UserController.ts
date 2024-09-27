@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
 class UserController {
-
+    
     public async login(req: Request, res: Response) {
         const { mail, password } = req.body;
         console.log("Iniciando login com email:", mail);
@@ -35,10 +35,11 @@ class UserController {
 
     
     public async create(req: Request, res: Response): Promise<Response> {
-        const { name, mail, password, idade, peso, altura, genero } = req.body;
+        const { name, mail, password, idade, dataNascimento, peso, altura, genero } = req.body;
         console.log("Dados recebidos para criação do usuário:", { name, mail, password, idade, peso, altura, genero });
-
+        
         try {
+
             console.log("Senha antes do hash:", password);
 
             const hashedPassword = await bcrypt.hash(password, 10);
@@ -88,24 +89,50 @@ class UserController {
     }
 
     public async update(req: Request, res: Response): Promise<Response> {
-        const { id, name } = req.body;
+        const {id: _id} = req.params
+        const { name, mail, password, peso, altura, genero, idade} = req.body;
+    
         try {
-            const document = await User.findById(id);
+           
+            const document = await User.findById(_id);
             if (!document) {
-                return res.json({ message: "Nome inexistente" });
+                return res.status(404).json({ message: "Usuário inexistente." });
             }
-
-            document.name = name;
+    
+            
+            const existingUser = await User.findOne({ mail });
+            if (existingUser && existingUser.id !== _id) {
+                return res.status(400).json({ message: "Este e-mail já está em uso." });
+            }
+    
+            document.name = name || document.name; 
+            document.mail = mail || document.mail; 
+            
+           
+            if (password) {
+                const salt = await bcrypt.genSalt(10); 
+                document.password = await bcrypt.hash(password, salt); 
+            }
+    
+            document.peso = peso || document.peso; 
+            document.altura = altura || document.altura; 
+            document.genero = genero || document.genero; 
+            document.idade = idade || document.idade; 
+    
+            
 
             const resp = await document.save();
-            return res.json(resp);
+    
+            return res.status(200).json({ message: "Perfil atualizado com sucesso.", user: resp });
         } catch (error: any) {
-            if (error.code === 11000 || error.code === 11001) {
-                return res.json({ message: "Este nome já está em uso" });
-            } else if (error && error.errors["name"]) {
-                return res.json({ message: error.errors["name"].message });
+            
+            if (error.code === 11000) {
+                return res.status(400).json({ message: "Este e-mail já está em uso." });
+            } else if (error.errors && error.errors["name"]) {
+                return res.status(400).json({ message: error.errors["name"].message });
             }
-            return res.json({ message: error.message });
+    
+            return res.status(500).json({ message: "Erro ao atualizar perfil.", error: error.message });
         }
     }
 }
