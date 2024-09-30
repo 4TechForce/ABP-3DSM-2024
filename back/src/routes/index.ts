@@ -1,12 +1,13 @@
 import { Router, Request, Response } from "express";
 import UserController from "../controllers/UserController";
 import user from "./user";
+import AuthController from "../controllers/AuthController";
 
 
 
 const routes = Router();
 routes.post("/cadastro", UserController.create);
-routes.post("/login", UserController.login);
+routes.post("/login", AuthController.login);
 routes.use("/user", user)
 
 

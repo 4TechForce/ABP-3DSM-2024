@@ -1,10 +1,16 @@
 import { Router } from "express";
-import controller from "../controllers/UserController";
+import UserController from "../controllers/UserController";
+import AuthController from "../controllers/AuthController";
 import { validadeAcess } from "../middleware";
 
 const routes = Router();
-routes.post('/', validadeAcess ,controller.create);
-routes.get('/', controller.list);
-routes.delete('/deleteProfile/:id', controller.delete);
-routes.put('/profile/:id', controller.update);
+routes.post('/', validadeAcess ,UserController.create);
+routes.get('/', UserController.list);
+
+routes.delete('/deleteProfile/:id', UserController.delete);
+routes.put('/profile/:id', UserController.update);
+
+routes.post('/forgot-password', AuthController.forgotPassword.bind(AuthController));
+routes.post('/reset-password/:token', AuthController.resetPassword);
+
 export default routes;

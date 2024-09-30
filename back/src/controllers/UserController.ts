@@ -1,41 +1,12 @@
 import { Request, Response } from "express"; 
 import { User } from "../models";
-import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
 class UserController {
-    
-    public async login(req: Request, res: Response) {
-        const { mail, password } = req.body;
-        console.log("Iniciando login com email:", mail);
-
-        try {
-            const user = await User.findOne({ mail }).select('+password');
-            console.log("Usuário encontrado:", user);
-
-            
-            if (user && await bcrypt.compare(password, user.password)) {
-                console.log("Senha correta, gerando token...");
-
-                const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET!, {
-                    expiresIn: '1h',
-                });
-
-                console.log("Token gerado:", token);
-                return res.json({ token });
-            } else {
-                console.log("Email ou senha incorretos");
-                return res.status(401).json({ message: 'Email ou senha incorretos' });
-            }
-        } catch (error) {
-            console.error("Erro no servidor:", error);
-            return res.status(500).json({ message: 'Erro no servidor' });
-        }
-    }
 
     
     public async create(req: Request, res: Response): Promise<Response> {
-        const { name, mail, password, idade, dataNascimento, peso, altura, genero } = req.body;
+        const { name, mail, password, idade, peso, altura, genero, nivelAtividade, objetivoDieta, pesoAlvo } = req.body;
         console.log("Dados recebidos para criação do usuário:", { name, mail, password, idade, peso, altura, genero });
         
         try {
@@ -45,7 +16,7 @@ class UserController {
             const hashedPassword = await bcrypt.hash(password, 10);
             console.log("Senha após o hash:", hashedPassword);
 
-            const document = new User({ name, mail, password: hashedPassword, idade, peso, altura, genero });
+            const document = new User({ name, mail, password: hashedPassword, idade, peso, altura, genero, nivelAtividade, objetivoDieta, pesoAlvo});
             const response = await document.save();
 
             return res.status(201).json({ message: "Usuário criado com sucesso!", data: response });

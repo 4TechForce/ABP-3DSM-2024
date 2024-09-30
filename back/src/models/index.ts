@@ -59,6 +59,19 @@ const UserSchema = new Schema({
         },
         required: true
       },
+
+      nivelAtividade: {
+        type: String,
+        enum: ['sedentario', 'moderado', 'ativo', 'muito ativo'],
+        required: true,
+    },
+    objetivoDieta: {
+        type: String,
+        enum: ['perda de peso', 'manutenção', 'ganho de peso'],
+        required: true,
+    },
+    pesoAlvo: { type: Number, required: true },
+
 });
 
 const User = mongoose.model("User", UserSchema, "user");
