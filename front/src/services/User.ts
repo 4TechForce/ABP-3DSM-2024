@@ -11,9 +11,9 @@ class User {
     }
   }
 
-  async create(name:string, mail: string, password: string,idade:number,peso:number,altura:number,genero:string): Promise<TokenProps | ErrorProps> {
+  async create(name:string, mail: string, password: string,idade:string,peso:number,altura:number,genero:string,nivelAtividade:string, objetivoDieta:string, pesoAlvo:number ): Promise<TokenProps | ErrorProps> {
     try {
-      const { data } = await api.post("/cadastro", { name, mail, password,idade, peso, altura,genero });
+      const { data } = await api.post("/cadastro", { name, mail, password,idade, peso, altura,genero,nivelAtividade, objetivoDieta, pesoAlvo  });
       return data;
     } catch (error: any) {
       return error;

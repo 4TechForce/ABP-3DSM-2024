@@ -8,7 +8,7 @@ export interface UserContextProps {
     setToken: (value: TokenProps | null) => void;
     login: (mail: string, password: string) => void;
     logout: () => void;
-    create: (alias: string, mail: string, password: string, idade:number,peso:number, altura:number,genero:string) => void;
+    create: (alias: string, mail: string, password: string, idade:string,peso:number, altura:number,genero:string,nivelAtividade:string, objetivoDieta:string, pesoAlvo:number ) => void;
     getUsers: () => void;
     updateRole: (id: string, role: string) => Promise<boolean>;
     error: ErrorProps | null;
@@ -179,7 +179,7 @@ export interface UserProps {
     id: string;
     alias: string;
     mail: string;
-    idade: number;
+    idade: string;
     peso: number;
     altura: number;
     role: string;

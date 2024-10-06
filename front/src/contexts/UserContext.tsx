@@ -50,8 +50,8 @@ export function UserProvider({ children }: ProviderProps) {
     }
   };
 
-  const create = async (name: string, mail: string, password: string, idade:number, peso:number,altura:number,genero:string) => {
-    const response = await User.create(name, mail, password, idade,peso,altura,genero);
+  const create = async (name: string, mail: string, password: string, idade:string, peso:number,altura:number,genero:string,nivelAtividade:string, objetivoDieta:string, pesoAlvo:number ) => {
+    const response = await User.create(name, mail, password, idade,peso,altura,genero,nivelAtividade, objetivoDieta, pesoAlvo );
     if (isErrorProps(response)) {
       setError(response);
     } else {

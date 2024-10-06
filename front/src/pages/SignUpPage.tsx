@@ -1,6 +1,6 @@
 import { useState } from "react";
-import styled from "styled-components";
-import { Input, Button, Error, LinkButton } from "../components";
+import styled, { createGlobalStyle } from "styled-components";
+import { Input, Error, LinkButton } from "../components";
 import { useUser } from "../hooks";
 import confetti from 'canvas-confetti';
 
@@ -8,10 +8,14 @@ export default function SignUpPage() {
   const [name, setName] = useState("");
   const [mail, setMail] = useState("");
   const [password, setPassword] = useState("");
-  const [idade, setIdade] = useState(0);
+  const [idade, setIdade] = useState("");
   const [peso, setPeso] = useState(0);
   const [altura, setAltura] = useState(0);
-  const [genero, setGenero] = useState(""); // Novo estado para gênero
+  const [genero, setGenero] = useState("");
+  const [nivelAtividade, setNivelAtividade] = useState("");
+  const [objetivoDieta, setObjetivoDieta] = useState("");
+  const [pesoAlvo, setPesoAlvo] = useState(0);
+
   const { create, error, setError } = useUser();
 
   const handleCreate = () => {
@@ -21,16 +25,23 @@ export default function SignUpPage() {
       setError({ error: "Forneça o e-mail" });
     } else if (!password) {
       setError({ error: "Forneça a senha" });
-    } else if (idade <= 0) {
-      setError({ error: "Forneça uma idade válida" });
+    } else if (!idade) {
+      setError({ error: "Forneça uma data de nascimento válida" });
     } else if (peso <= 0) {
       setError({ error: "Forneça um peso válido" });
     } else if (altura <= 0) {
       setError({ error: "Forneça uma altura válida" });
     } else if (!genero) {
       setError({ error: "Selecione o gênero" });
+    } else if (!nivelAtividade) {
+      setError({ error: "Selecione o seu nível de atividades" });
+    } else if (!objetivoDieta) {
+      setError({ error: "Selecione o seu objetivo" });
+    } else if (pesoAlvo <= 0) {
+      setError({ error: "Forneça um peso alvo válido" });
     } else {
-      create(name, mail, password, idade, peso, altura, genero);
+      // Envia os dados para o backend
+      create(name, mail, password,  idade, peso, altura, genero, nivelAtividade, objetivoDieta, pesoAlvo);
 
       // Efeito de confete
       confetti({
@@ -41,123 +52,307 @@ export default function SignUpPage() {
     }
   };
 
+
   return (
     <Wrapper>
-      {error && <Error>{error.error}</Error>}
-      <FieldWrapper>
-        <TextSld>Cadastro de novo usuário</TextSld>
-        <Input
-          type="text"
-          id="name"
-          label="Nome de usuário"
-          value={name}
-          setValue={setName}
-        />
-        <Input
-          type="text"
-          id="mail"
-          label="e-mail"
-          value={mail}
-          setValue={setMail}
-        />
-        <Input
-          type="password"
-          id="password"
-          label="Senha"
-          value={password}
-          setValue={setPassword}
-        />
-        <Input
-          type="number"
-          id="idade"
-          label="Idade"
-          value={idade.toString()} // Conversão para string
-          setValue={(e) => setIdade(Number(e))} // Conversão para número
-        />
-        <Input
-          type="number"
-          id="peso"
-          label="Peso (kg)"
-          value={peso.toString()} // Conversão para string
-          setValue={(e) => setPeso(Number(e))} // Conversão para número
-        />
-        <Input
-          type="number"
-          id="altura"
-          label="Altura (cm)"
-          value={altura.toString()} // Conversão para string
-          setValue={(e) => setAltura(Number(e))} // Conversão para número
-        />
-
-        {/* Novo campo de seleção de gênero */}
-        <SelectWrapper>
-          <label htmlFor="genero">Gênero</label>
-          <select
-            id="genero"
-            value={genero}
-            onChange={(e) => setGenero(e.target.value)}
-          >
-            <option value="">Selecione o gênero</option>
-            <option value="Masculino">Masculino</option>
-            <option value="Feminino">Feminino</option>
-            <option value="Outro">Outro</option>
-          </select>
-        </SelectWrapper>
-
-        <LineSld>
-          <StyledButton label="Cadastrar" click={handleCreate} />
-          <LinkButton label="Logar-se" to="/login" />
-        </LineSld>
-      </FieldWrapper>
+    {error && <Error>{error.error}</Error>}
+    <Header>
+      <Logo src="../Imagens/Camada_1.png" alt="Pequenos Sabores" />
+    </Header>
+    <Content>
+        <Container>
+          <GlobalStyle />
+          <Title>Meus Dados</Title>
+          <FormGroup>
+            <label>Sexo</label>
+            <RadioGroup>
+              <label>
+                <input
+                  type="radio"
+                  name="genero"
+                  value="Feminino"
+                  onChange={(e) => setGenero(e.target.value)}
+                />
+                Feminino
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="genero"
+                  value="Masculino"
+                  onChange={(e) => setGenero(e.target.value)}
+                />
+                Masculino
+              </label>
+            </RadioGroup>
+          </FormGroup>
+          <FormGroup>
+            <label>Peso atual (kg)</label>
+            <input
+              className="entrada"
+              type="number"
+              value={peso || ""}
+              onChange={(e) => setPeso(Number(e.target.value))}
+            />
+          </FormGroup>
+          <FormGroup>
+            <label>Altura (cm)</label>
+            <input
+              className="entrada"
+              type="number"
+              value={altura || ""}
+              onChange={(e) => setAltura(Number(e.target.value))}
+            />
+          </FormGroup>
+          <FormGroup>
+            <label>Data de Nascimento</label>
+            <input
+              type="date"
+              value={idade}
+              onChange={(e) => setIdade(e.target.value)} // Mantém o valor como string de data
+            />
+          </FormGroup>
+          <FormGroup>
+            <label>Nível de Atividade Física</label>
+            <RadioGroup>
+              <label>
+                <input
+                  type="radio"
+                  name="Sedentário"
+                  value="Sedentário"
+                  onChange={(e) => setNivelAtividade(e.target.value)}
+                />
+                Sedentário
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="Moderado"
+                  value="Moderado"
+                  onChange={(e) => setNivelAtividade(e.target.value)}
+                />
+                Moderado
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="Ativo"
+                  value="Ativo"
+                  onChange={(e) => setNivelAtividade(e.target.value)}
+                />
+                Ativo
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="Muito Ativo"
+                  value="Muito Ativo"
+                  onChange={(e) => setNivelAtividade(e.target.value)}
+                />
+                Muito Ativo
+              </label>
+            </RadioGroup>
+          </FormGroup>
+          {/* Adicionar mais campos conforme necessário */}
+        </Container>
+        <Container1>
+          <Title1>Meu Objetivo</Title1>
+          <FormGroup1>
+            <label>Objetivo da Dieta</label>
+            <select
+              value={objetivoDieta}
+              onChange={(e) => setObjetivoDieta(e.target.value)}
+            >
+              <option value="">Selecione</option>
+              <option value="Perder peso">Perder peso</option>
+              <option value="Manter peso">Manter peso</option>
+              <option value="Ganhar peso">Ganhar peso</option>
+            </select>
+          </FormGroup1>
+          <FormGroup1>
+            <label>Peso alvo (kg)</label>
+            <input
+              className="entrada"
+              type="number"
+              value={pesoAlvo || ""}
+              onChange={(e) => setPesoAlvo(Number(e.target.value))}
+            />
+          </FormGroup1>
+          {/* Adicionar mais campos conforme necessário */}
+        </Container1>
+        <Container2>
+          <Title2>Meu Perfil</Title2>
+          <FormGroup2>
+            <label>Nome</label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </FormGroup2>
+          <FormGroup2>
+            <label>Senha</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </FormGroup2>
+          <FormGroup2>
+            <label>E-mail</label>
+            <input
+              type="email"
+              value={mail}
+              onChange={(e) => setMail(e.target.value)}
+            />
+          </FormGroup2>
+        </Container2>
+        <ButtonContainer>
+          <Button onClick={handleCreate}>Cadastrar</Button>
+          <Button>Cancelar</Button>
+        </ButtonContainer>
+      </Content>
     </Wrapper>
   );
 }
 
+
+
 const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
+  width: 100vw;
   height: 100vh;
-  box-sizing: border-box;
-`;
-
-const LineSld = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-top: 10px;
-`;
-
-const TextSld = styled.div`
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #333;
-  margin: 10px 0;
-`;
-
-const FieldWrapper = styled.div`
+  background-color: #f6f6f6;
   display: flex;
   flex-direction: column;
-  width: 500px;
+`;
+
+const Header = styled.header`
+  width: 100%;
+  padding: 10px;
+  background-color: #f6f6f6;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  top: 0;
+  left: 0;
+`;
+
+const Logo = styled.img`
+  width: 200px; /* Ajustar conforme necessário */
+  height: auto;
+`;
+
+const Content = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  margin-top: 100px; /* Ajustar para não sobrepor o logo */
   align-self: center;
-  margin-top: auto;
-  margin-bottom: auto;
-  padding: 20px;
-  border: 1px solid #999;
-  border-radius: 5px;
-  box-sizing: border-box;
-  background-color: #f9f9f9;
 `;
 
-const SelectWrapper = styled.div`
+const ButtonContainer = styled.div`
   display: flex;
-  flex-direction: column;
-  margin-bottom: 10px;
+  justify-content: space-between; /* Alinha os botões nas extremidades */
+  margin-top: auto; /* Empurra os botões para o final */
+  padding: 20px; /* Espaçamento em volta dos botões */
+`;
+
+const Button = styled.button`
+  background-color: #4caf50; /* Cor de fundo para o botão de cadastrar */
+  color: white; /* Cor do texto */
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+
+  &:hover {
+    background-color: #45a049; /* Cor ao passar o mouse */
+  }
+`;
+const Container = styled.div`
+  border-radius: 39px;
+  background: var(--CoresPrincipais-Background-Secundrio, #FFF);
+  width: 1882px;
+  height: auto;
+  padding: 20px;
+  flex-shrink: 0;
+`;
+
+const Title = styled.h2`
+  width: 168px;
+  position: relative;
+  font-size: 24px;
+  letter-spacing: 0.02em;
+  line-height: 24px;
+  font-weight: 600;
+  font-family: Inter;
+  color: #29384e;
+  text-align: center;
+  display: inline-block;
+  height: 30px;
+`;
+
+const FormGroup = styled.div`
+  margin-bottom: 15px;
 
   label {
-    font-size: 0.9rem;
+    display: block;
+    margin-bottom: 5px;
+  }
+
+  input {
+    display: flex;
+    width: 230px;
+    padding: var(--Totalitems, 10px) var(--Padding, 16px);
+    justify-content: space-between;
+    align-items: center;
+    border-radius: var(--Totalitems, 10px);
+    border: 1px solid var(--Border-Primary, #DAE3E9);
+  }
+`;
+
+const RadioGroup = styled.div`
+  display: flex;
+  gap: 10px;
+`;
+
+const GlobalStyle = createGlobalStyle`
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@600&display=swap');
+
+  body {
+    margin: 0;
+    line-height: normal;
+    font-family: 'Inter', sans-serif;
+  }
+`;
+
+
+
+// meu objetivo
+const Container1 = styled.div`
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #fff;
+`;
+
+const Title1 = styled.h2`
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+`;
+
+const FormGroup1 = styled.div`
+  margin-bottom: 15px;
+
+  label {
+    display: block;
     margin-bottom: 5px;
   }
 
   select {
+    width: 100%;
     padding: 8px;
     font-size: 1rem;
     border-radius: 5px;
@@ -165,22 +360,35 @@ const SelectWrapper = styled.div`
   }
 `;
 
-const StyledButton = styled(Button)`
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
 
-  &:hover {
-    background-color: #45a049;
+// meuperfil
+const Container2 = styled.div`
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #fff;
+`;
+
+const Title2 = styled.h2`
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+`;
+
+const FormGroup2 = styled.div`
+  margin-bottom: 15px;
+
+  label {
+    display: block;
+    margin-bottom: 5px;
   }
 
-  &:active {
-    background-color: #3e8e41;
-    box-shadow: 0 5px #666;
-    transform: translateY(4px);
+  input {
+    width: 100%;
+    padding: 8px;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
   }
 `;
+
+

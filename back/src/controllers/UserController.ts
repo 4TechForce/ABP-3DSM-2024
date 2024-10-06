@@ -7,7 +7,7 @@ class UserController {
     
     public async create(req: Request, res: Response): Promise<Response> {
         const { name, mail, password, idade, peso, altura, genero, nivelAtividade, objetivoDieta, pesoAlvo } = req.body;
-        console.log("Dados recebidos para criação do usuário:", { name, mail, password, idade, peso, altura, genero });
+        console.log("Dados recebidos para criação do usuário:", { name, mail, password, idade, peso, altura, genero, nivelAtividade, objetivoDieta, pesoAlvo });
         
         try {
 

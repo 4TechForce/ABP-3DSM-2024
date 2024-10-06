@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import { NotFoundPage, SignInPage, SignUpPage } from "../pages";
 import Inicial from "../pages/Inicial";
+import ForgotPassword from "../pages/Recuperacao";
 
 
 export default function UnsignedRoutes() {
@@ -11,6 +12,7 @@ export default function UnsignedRoutes() {
         <Route path="/login" element={<SignInPage />} />
         <Route path="/cadastro" element={<SignUpPage />} />
         <Route path="/*" element={<NotFoundPage />} />
+        <Route path="/recuperacao" element= {<ForgotPassword />} />
       </Routes>
     </>
   );

@@ -62,12 +62,12 @@ const UserSchema = new Schema({
 
       nivelAtividade: {
         type: String,
-        enum: ['sedentario', 'moderado', 'ativo', 'muito ativo'],
+        enum: ['Sedentário', 'Moderado', 'Ativo', 'Muito Ativo'],
         required: true,
     },
     objetivoDieta: {
         type: String,
-        enum: ['perda de peso', 'manutenção', 'ganho de peso'],
+        enum: ['Perder peso', 'Manter peso', 'Ganhar peso'],
         required: true,
     },
     pesoAlvo: { type: Number, required: true },
