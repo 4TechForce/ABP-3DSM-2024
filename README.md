@@ -53,7 +53,7 @@ Nós da 4TechForce propomos a criação de uma aplicação web destinada ao regi
 | Requisito | Sprint | Prioridade | 
 |:---------:|:------:|:----------:|
 |   Implementar autenticação de usuário   |  1  |    Alta   |   
-|   Implementar registro de ingestão de calorias    |  2  |    Alta    |  
+|   Implementar registro de ingestão de calorias    |  3  |    Alta    |  
 |   Registrar dados de peso, altura, e atividade física    |  2  |    Alta  | 
 |   Cadastro do usuário   |  2   |    Alta    |
 |   Recuperação de senha    |  2   |    Alta    |
@@ -65,7 +65,7 @@ Nós da 4TechForce propomos a criação de uma aplicação web destinada ao regi
 |   Armazenamento e integração com MongoDB e SGBD   |  1   |    Alta    | 
 |   Desenvolver back-end em TypeScript e Node.js   |  1  |    Alta    | 
 |   Desenvolver front-end em React TypeScript com as telas descritas    |  2   |    Alta    | 
-|  Garantir desempenho adequado do sistema   |  2   |    Alta    | 
+|  Garantir desempenho adequado do sistema   |  3   |    Alta    | 
 
 
 </div>
