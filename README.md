@@ -38,7 +38,7 @@ Nós da 4TechForce propomos a criação de uma aplicação web destinada ao regi
 
 | Sprint | Período | Vídeo | Status |
 |:------:|:-------:|:-----:|:------:|
-| 01     | 02/09/2024 – 17/09/2024 | <a href="">Vídeo Sprint 1</a> | Entregue :heavy_check_mark: | 
+| 01     | 02/09/2024 – 17/09/2024 | <a href="https://youtu.be/SMpmC5BBLs0">Vídeo Sprint 1</a> | Entregue :heavy_check_mark: | 
 | 02     | 23/09/2024 - 08/10/2024  | <a href="">Vídeo Sprint 2</a> | Em desenvolvimento |    
 | 03     | 14/10/2024 - 08/11/2024  | <a href="">Vídeo Sprint 3</a> | Em desenvolvimento | 
 
@@ -55,9 +55,13 @@ Nós da 4TechForce propomos a criação de uma aplicação web destinada ao regi
 |   Implementar autenticação de usuário   |  1  |    Alta   |   
 |   Implementar registro de ingestão de calorias    |  2  |    Alta    |  
 |   Registrar dados de peso, altura, e atividade física    |  2  |    Alta  | 
+|   Cadastro do usuário   |  2   |    Alta    |
+|   Recuperação de senha    |  2   |    Alta    |
+|   Gerenciamento de perfil do usuário  |  2   |    Alta    |
+|   Registrar alimentos    |  3   |    Alta    | 
+|  Histórico de ingestão de calorias    |  3   |    Alta    | 
 |   Gerar relatório de acompanhamento de peso    |  3   |    Alta    | 
 |   Assegurar compatibilidade entre diferentes dispositivos    |  3  |   Média    | 
-|   Manter documentação atualizada no GitHub    |  2   |    Alta    | 
 |   Armazenamento e integração com MongoDB e SGBD   |  1   |    Alta    | 
 |   Desenvolver back-end em TypeScript e Node.js   |  1  |    Alta    | 
 |   Desenvolver front-end em React TypeScript com as telas descritas    |  2   |    Alta    | 
@@ -79,10 +83,11 @@ Nós da 4TechForce propomos a criação de uma aplicação web destinada ao regi
 | Registrar dados de peso, altura e atividade física       | "Como usuário, quero registrar meus dados de peso, altura e frequência de atividade física, para que eu possa monitorar meu progresso e ajustar minha dieta e exercícios conforme necessário." |
 | Gerar relatório de acompanhamento de peso                | "Como usuário, quero gerar relatórios de acompanhamento do meu peso, para que eu possa visualizar meu progresso ao longo do tempo e fazer ajustes conforme necessário." |
 | Assegurar compatibilidade entre diferentes dispositivos  | "Como usuário, quero que o sistema seja compatível com diferentes dispositivos e tamanhos de tela, para que eu possa acessar o sistema de qualquer dispositivo sem problemas de visualização." |
-| Manter documentação atualizada no GitHub                 | "Como membro da equipe, quero ter acesso à documentação atualizada no GitHub, para que eu possa acompanhar o progresso do projeto e entender o estado atual do sistema." |
-| Armazenamento e integração com MongoDB e SGBD            | "Como desenvolvedor, quero configurar o armazenamento de dados usando MongoDB e integrá-lo ao sistema, para que eu possa garantir a persistência e recuperação adequada dos dados." |
-| Desenvolver back-end em TypeScript e Node.js              | "Como desenvolvedor, quero implementar o back-end do sistema utilizando TypeScript e Node.js, para que eu possa garantir que o sistema seja robusto, escalável e mantenha boas práticas de desenvolvimento." |
-| Desenvolver front-end em React TypeScript com as telas descritas | "Como usuário, quero ter uma interface de usuário desenvolvida em React TypeScript com as telas especificadas, para que eu possa interagir com o sistema de maneira intuitiva e eficiente." |
+| Cadastro do usuário | "Como usuário, quero me cadastrar no sistema, para poder acessar e usar suas funcionalidades." |
+| Recuperação de senha | "Como usuário, quero recuperar minha senha caso eu a esqueça, para continuar acessando minha conta." |
+| Gerenciamento de perfil do usuário | "Como usuário, quero alterar minhas informações de perfil, para que meus dados estejam sempre atualizados." |
+| Registrar alimentos | "Como usuário, quero registrar os alimentos que consumo, para que eu possa monitorar melhor minha dieta." |
+| Histórico de ingestão de calorias | "Como usuário, quero acessar um histórico de minha ingestão de calorias, para que eu possa revisar minhas refeições passadas, identificar padrões na minha dieta e ajustar minha alimentação conforme necessário para atingir meus objetivos de saúde." |
 | Garantir desempenho adequado do sistema                  | "Como usuário, quero que o sistema funcione de maneira rápida e eficiente, para que eu possa ter uma experiência de uso sem lentidão ou interrupções." |
 
 
@@ -102,14 +107,60 @@ Nós da 4TechForce propomos a criação de uma aplicação web destinada ao regi
 
 <h3 align="center">Tarefas na Sprint</h3>
 
-| Tarefas              | Story Point |
-|:--------------------:|:-----------:|
-| Criação das telas no figma com o design a ser utilizado pelo o website  |      13       |
-| Tela de Login e Cadastro para a apresentação|      2       |
-| Configuração do banco de dados |      8      |
-| Operações CRUD, autenticação de rotas e login   |      1       |
-| Criação do vídeo para apresentação |      2      |
-| **Total Story Point** |       26      |
+| Tarefa               | Descrição da tarefa                           | Story Point |
+|:---------------------:|:---------------------------------------------:|:-----------:|
+| Item 1.1.1            | Criação das telas no Figma com o design a ser utilizado pelo website |      13      |
+| Item 1.1.2            | Tela de Login e Cadastro para a apresentação  |      2      |
+| Item 1.1.3            | Configuração do banco de dados                |      8      |
+| Item 1.2              | Operações CRUD, autenticação de rotas e login |      1      |
+| Item 1.3              | Criação do vídeo para apresentação            |      2      |
+|                       | **Total Story Point**                         |     **26**  |
+
+
+</div>
+<br>
+<br>
+
+
+## Métrica do Time
+<p align="center">
+<img src="./front/assets/burndown/grafico-burndown-sprint1.PNG">
+</p>
+<br>
+<br>
+
+<h3 align="center">Sprint 2</h3>
+
+<div align="center">
+
+| Item | Funcionalidade |
+|:----:|:--------------:|
+|  1   | Tela de cadastro  |
+|  2   | Landing page  |
+|  3   | Tela de contato  |
+|  4   | Tela de recuperação de senha  |
+|  5   | Tela de Gerenciamento do perfil do usuário |
+
+
+<h3 align="center">Tarefas na Sprint</h3>
+
+| Tarefa               | Descrição da tarefa                           | Story Point |
+|:---------------------:|:---------------------------------------------:|:-----------:|
+| Item 2.1.1            | Conexão no banco de dados MongoAtlas          |      1      |
+| Item 2.1.2            | Migração do banco de dados local para nuvem   |      1      |
+| Item 2.1.3            | Cadastro do usuário backend                   |      1      |
+| Item 2.1.4            | Gerenciamento de perfil do usuário backend    |      3      |
+| Item 2.1.5            | Recuperação de senha backend                  |      2      |
+| Item 2.1.6            | Tela de cadastro frontend                     |      3      |
+| Item 2.1.7            | Tela de recuperação de senha frontend         |      1      |
+| Item 2.1.8            | Atualização da tela de login frontend         |      1      |
+| Item 2.1.9            | Ideação de ícones para interação de interface |      2      |
+| Item 2.1.10           | Ajuste de elementos pedidos pela professora   |      1      |
+| Item 2.1.11           | Landing page frontend                         |      3      |
+| Item 2.1.12           | Tela de contato frontend                      |      2      |
+| Item 2.1.13           | Conexão com o backend                         |      3      |
+| Item 2.2              | Criação do vídeo para apresentação            |      2      |
+|                       | **Total Story Point**                         |     **26**  |
 
 </div>
 <br>
@@ -117,7 +168,7 @@ Nós da 4TechForce propomos a criação de uma aplicação web destinada ao regi
 
 ## Métrica do Time
 <p align="center">
-<img src="./front/assets/burndown/grafico-burndown-sprint1.PNG">
+<img src="./front/assets/burndown/grafico-burndown-sprint2.PNG">
 </p>
 <br>
 <br>
