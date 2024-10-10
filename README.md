@@ -39,7 +39,7 @@ Nós da 4TechForce propomos a criação de uma aplicação web destinada ao regi
 | Sprint | Período | Vídeo | Status |
 |:------:|:-------:|:-----:|:------:|
 | 01     | 02/09/2024 – 17/09/2024 | <a href="https://youtu.be/SMpmC5BBLs0">Vídeo Sprint 1</a> | Entregue :heavy_check_mark: | 
-| 02     | 23/09/2024 - 08/10/2024  | <a href="">Vídeo Sprint 2</a> | Em desenvolvimento |    
+| 02     | 23/09/2024 - 08/10/2024  | <a href="https://youtu.be/HqeOXi18xnM ">Vídeo Sprint 2</a> | Entregue :heavy_check_mark: |    
 | 03     | 14/10/2024 - 08/11/2024  | <a href="">Vídeo Sprint 3</a> | Em desenvolvimento | 
 
 </div>
