@@ -71,6 +71,11 @@ const UserSchema = new Schema({
         required: true,
     },
     pesoAlvo: { type: Number, required: true },
+    classificacao: {
+        type: String,
+        enum: ['Abaixo do Peso', 'Peso Normal', 'Sobrepeso'],
+        required: true
+    }
 
 });
 

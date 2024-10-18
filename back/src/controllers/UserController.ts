@@ -1,39 +1,48 @@
 import { Request, Response } from "express"; 
 import { User } from "../models";
 import bcrypt from 'bcrypt';
+import { calculateClassification } from "../services/userServices";
 
 class UserController {
 
     
     public async create(req: Request, res: Response): Promise<Response> {
         const { name, mail, password, idade, peso, altura, genero, nivelAtividade, objetivoDieta, pesoAlvo } = req.body;
-        console.log("Dados recebidos para criação do usuário:", { name, mail, password, idade, peso, altura, genero, nivelAtividade, objetivoDieta, pesoAlvo });
-        
+    
         try {
-
-            console.log("Senha antes do hash:", password);
-
             const hashedPassword = await bcrypt.hash(password, 10);
-            console.log("Senha após o hash:", hashedPassword);
-
-            const document = new User({ name, mail, password: hashedPassword, idade, peso, altura, genero, nivelAtividade, objetivoDieta, pesoAlvo});
+    
+            let birthDate: Date;
+            try {
+                birthDate = new Date(idade.split('/').reverse().join('-'));
+            } catch (error) {
+                return res.status(400).json({ message: "Data de nascimento inválida" });
+            }
+    
+            const classificacao = await calculateClassification(peso, birthDate, genero);
+    
+            const document = new User({
+                name,
+                mail,
+                password: hashedPassword,
+                idade: birthDate,
+                peso,
+                altura,
+                genero,
+                nivelAtividade,
+                objetivoDieta,
+                pesoAlvo,
+                classificacao
+            });
+    
             const response = await document.save();
-
             return res.status(201).json({ message: "Usuário criado com sucesso!", data: response });
-
+    
         } catch (error: any) {
             console.error("Erro ao criar usuário:", error);
-
-            if (error.code === 11000 || error.code === 11001) {
-                return res.json({ message: "Este email já está em uso" });
-            } else if (error && error.errors["mail"]) {
-                return res.json({ message: error.errors["mail"].message });
-            }
-
             return res.status(500).json({ message: "Erro ao criar usuário", error: error.message });
         }
     }
-
    
     public async list(req: Request, res: Response): Promise<Response> {
         const { name, mail, password, idade, peso, altura, genero } = req.body; 
@@ -60,52 +69,79 @@ class UserController {
     }
 
     public async update(req: Request, res: Response): Promise<Response> {
-        const {id: _id} = req.params
-        const { name, mail, password, peso, altura, genero, idade} = req.body;
+        let { id: _id } = req.params;
+        const { name, mail, password, peso, altura, genero, idade } = req.body;
+    
+        _id = _id.replace(/^:/, '');
+    
+        console.log("ID recebido:", _id);
+        console.log("Dados recebidos:", { name, mail, password, peso, altura, genero, idade });
     
         try {
-           
             const document = await User.findById(_id);
+            console.log("Documento encontrado:", document);
+    
             if (!document) {
+                console.log("Usuário inexistente");
                 return res.status(404).json({ message: "Usuário inexistente." });
             }
     
-            
             const existingUser = await User.findOne({ mail });
+            console.log("Usuário com o mesmo e-mail encontrado:", existingUser);
+    
             if (existingUser && existingUser.id !== _id) {
+                console.log("E-mail já em uso por outro usuário.");
                 return res.status(400).json({ message: "Este e-mail já está em uso." });
             }
     
-            document.name = name || document.name; 
-            document.mail = mail || document.mail; 
-            
-           
+            document.name = name || document.name;
+            document.mail = mail || document.mail;
+    
             if (password) {
-                const salt = await bcrypt.genSalt(10); 
-                document.password = await bcrypt.hash(password, salt); 
+                console.log("Atualizando senha...");
+                const salt = await bcrypt.genSalt(10);
+                document.password = await bcrypt.hash(password, salt);
             }
     
-            document.peso = peso || document.peso; 
-            document.altura = altura || document.altura; 
-            document.genero = genero || document.genero; 
-            document.idade = idade || document.idade; 
+            document.peso = peso || document.peso;
+            document.altura = altura || document.altura;
+            document.genero = genero || document.genero;
     
+            if (idade) {
+                const [day, month, year] = idade.split('/'); 
+                const idadeFormatada = new Date(`${year}-${month}-${day}`); 
+                if (isNaN(idadeFormatada.getTime())) {
+                    return res.status(400).json({ message: "Formato de idade inválido." });
+                }
+                document.idade = idadeFormatada;
+            }
             
+        const classificacao = await calculateClassification(document.peso, document.idade, document.genero);
+        document.classificacao = classificacao; 
 
+            console.log("Documento após atualização:", document);
+            
             const resp = await document.save();
+            console.log("Documento salvo:", resp);
     
             return res.status(200).json({ message: "Perfil atualizado com sucesso.", user: resp });
+    
         } catch (error: any) {
-            
+            console.error("Erro ao atualizar perfil:", error);
+    
             if (error.code === 11000) {
+                console.log("Erro de duplicidade de e-mail");
                 return res.status(400).json({ message: "Este e-mail já está em uso." });
             } else if (error.errors && error.errors["name"]) {
+                console.log("Erro de validação de nome:", error.errors["name"].message);
                 return res.status(400).json({ message: error.errors["name"].message });
             }
     
+            // Erro genérico
             return res.status(500).json({ message: "Erro ao atualizar perfil.", error: error.message });
         }
     }
+    
 }
 
 export default new UserController();
