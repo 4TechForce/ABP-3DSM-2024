@@ -12,7 +12,7 @@ export default function UnsignedRoutes() {
         <Route path="/login" element={<SignInPage />} />
         <Route path="/cadastro" element={<SignUpPage />} />
         <Route path="/*" element={<NotFoundPage />} />
-        <Route path="/recuperacao" element= {<ForgotPassword />} />
+        <Route path="/reset-password" element= {<ForgotPassword />} />
       </Routes>
     </>
   );

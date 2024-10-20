@@ -26,7 +26,7 @@ export default function SignInPage() {
   };
 
   const handleRecuperaSenha = () => {
-    navigate("/recuperacao"); // Função de navegação para recuperação de senha
+    navigate("/reset-password"); // Função de navegação para recuperação de senha
   };
 
   useEffect(() => {

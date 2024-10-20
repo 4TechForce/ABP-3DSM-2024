@@ -3,6 +3,7 @@ import styled, { createGlobalStyle } from "styled-components";
 import { Input, Error, LinkButton } from "../components";
 import { useUser } from "../hooks";
 import confetti from 'canvas-confetti';
+import { useNavigate } from 'react-router-dom'; // Importação para navegação
 
 export default function SignUpPage() {
   const [name, setName] = useState("");
@@ -15,8 +16,10 @@ export default function SignUpPage() {
   const [nivelAtividade, setNivelAtividade] = useState("");
   const [objetivoDieta, setObjetivoDieta] = useState("");
   const [pesoAlvo, setPesoAlvo] = useState(0);
+  const [successMessage, setSuccessMessage] = useState(""); // Mensagem de sucesso
 
   const { create, error, setError } = useUser();
+  const navigate = useNavigate(); // Hook para navegação
 
   const handleCreate = () => {
     if (!name) {
@@ -41,7 +44,7 @@ export default function SignUpPage() {
       setError({ error: "Forneça um peso alvo válido" });
     } else {
       // Envia os dados para o backend
-      create(name, mail, password,  idade, peso, altura, genero, nivelAtividade, objetivoDieta, pesoAlvo);
+      create(name, mail, password, idade, peso, altura, genero, nivelAtividade, objetivoDieta, pesoAlvo);
 
       // Efeito de confete
       confetti({
@@ -49,17 +52,25 @@ export default function SignUpPage() {
         spread: 70,
         origin: { y: 0.6 },
       });
+
+      // Definir mensagem de sucesso
+      setSuccessMessage("Cadastro realizado com sucesso!");
+
+      // Redirecionar para a tela de login após 2 segundos
+      setTimeout(() => {
+        navigate('/login'); // Redireciona para a página de login
+      }, 2000); // 2 segundos de delay
     }
   };
 
-
   return (
     <Wrapper>
-    {error && <Error>{error.error}</Error>}
-    <Header>
-      <Logo src="../Imagens/Camada_1.png" alt="Pequenos Sabores" />
-    </Header>
-    <Content>
+      {error && <Error>{error.error}</Error>}
+      {successMessage && <Success>{successMessage}</Success>} {/* Exibe a mensagem de sucesso */}
+      <Header>
+        <Logo src="../Imagens/Camada_1.png" alt="Pequenos Sabores" />
+      </Header>
+      <Content>
         <Container>
           <GlobalStyle />
           <Title>Meus Dados</Title>
@@ -153,7 +164,6 @@ export default function SignUpPage() {
               </label>
             </RadioGroup>
           </FormGroup>
-          {/* Adicionar mais campos conforme necessário */}
         </Container>
         <Container1>
           <Title1>Meu Objetivo</Title1>
@@ -178,7 +188,6 @@ export default function SignUpPage() {
               onChange={(e) => setPesoAlvo(Number(e.target.value))}
             />
           </FormGroup1>
-          {/* Adicionar mais campos conforme necessário */}
         </Container1>
         <Container2>
           <Title2>Meu Perfil</Title2>
@@ -208,14 +217,24 @@ export default function SignUpPage() {
           </FormGroup2>
         </Container2>
         <ButtonContainer>
-          <Button onClick={handleCreate}>Cadastrar</Button>
           <Button>Cancelar</Button>
+          <Button1 onClick={handleCreate}>Confirma</Button1>
         </ButtonContainer>
       </Content>
     </Wrapper>
   );
 }
 
+// Estilos
+
+const Success = styled.div`
+  color: green;
+  font-size: 1.2rem;
+  text-align: center;
+  margin-top: 20px;
+`;
+
+// Outros estilos já definidos...
 
 
 const Wrapper = styled.div`
@@ -237,6 +256,7 @@ const Header = styled.header`
   left: 0;
 `;
 
+
 const Logo = styled.img`
   width: 200px; /* Ajustar conforme necessário */
   height: auto;
@@ -247,7 +267,7 @@ const Content = styled.div`
   display: flex;
   flex-direction: column;
   gap: 30px;
-  margin-top: 100px; /* Ajustar para não sobrepor o logo */
+  margin-top: 20px; /* Ajustar para não sobrepor o logo */
   align-self: center;
 `;
 
@@ -258,24 +278,37 @@ const ButtonContainer = styled.div`
   padding: 20px; /* Espaçamento em volta dos botões */
 `;
 
+const Button1 = styled.button`
+display: flex;
+width: 410px;
+height: 42px;
+padding: 12px 8px;
+justify-content: center;
+align-items: center;
+gap: var(--Totalitems, 10px);
+flex-shrink: 0;
+border-radius: 25px;
+background: var(--Success-Primary, #11BDB5);
+box-shadow: 0px 16px 25px -6px rgba(246, 0, 148, 0.15);
+`;
 const Button = styled.button`
-  background-color: #4caf50; /* Cor de fundo para o botão de cadastrar */
-  color: white; /* Cor do texto */
-  border: none;
-  border-radius: 5px;
-  padding: 10px 20px;
-  cursor: pointer;
-  font-size: 16px;
-
-  &:hover {
-    background-color: #45a049; /* Cor ao passar o mouse */
-  }
+display: flex;
+width: 410px;
+height: 42px;
+padding: 12px 8px;
+justify-content: center;
+align-items: center;
+gap: var(--Totalitems, 10px);
+flex-shrink: 0;
+border-radius: 25px;
+background: var(--Text-Secondary, #868C95);
+box-shadow: 0px 16px 25px -6px rgba(246, 0, 148, 0.15);
 `;
 const Container = styled.div`
   border-radius: 39px;
   background: var(--CoresPrincipais-Background-Secundrio, #FFF);
-  width: 1882px;
-  height: auto;
+  width: 1500px;
+  height: 627px;
   padding: 20px;
   flex-shrink: 0;
 `;
@@ -295,7 +328,7 @@ const Title = styled.h2`
 `;
 
 const FormGroup = styled.div`
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 
   label {
     display: block;

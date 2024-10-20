@@ -1,20 +1,25 @@
 import { Route, Routes } from "react-router-dom";
-import { EatPage, FoodPage, NotFoundPage, ProductPage, ProfilePage, SettingsPage, SignInPage } from "../pages";
+import { FoodPage, NotFoundPage, ProductPage, ProfilePage, SettingsPage, SignInPage } from "../pages";
 import { EatProvider, FoodProvider, ProductProvider } from "../contexts";
 import Logout from "../pages/Logout";
+import ResetPassword from "../pages/Editar";
+import Principal from "../pages/Principal";
+import Configuracoes from "../pages/Configuracoes";
+import Alimentos from "../pages/Alimentos";
 
 export default function UserRoutes() {
   return (
     <>
       <Routes>
-        <Route path="/" element={<EatProvider><EatPage /></EatProvider>} />
-        <Route path="/eat" element={<EatProvider><EatPage /></EatProvider>} />
-        <Route path="/foods" element={<FoodProvider><FoodPage /></FoodProvider>} />
-        <Route path="/products" element={<ProductProvider><ProductPage /></ProductProvider>} />
+        <Route path="/" element={<Principal />} />
+        <Route path="/principal" element={<Principal />} />
+        <Route path="/configuracoes" element={<Configuracoes />} />
+        <Route path="/alimentos" element={<Alimentos />} />
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/*" element={<NotFoundPage />} />
         <Route path="/logout" element={<Logout />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
       </Routes>
     </>
   );
