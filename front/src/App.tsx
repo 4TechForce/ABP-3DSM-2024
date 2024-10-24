@@ -1,14 +1,14 @@
-import React from 'react';
+import { BrowserRouter } from "react-router-dom";
+import Routes from "./routes";
+import { UserProvider } from "./contexts";
 
-const App: React.FC = () => {
+function App() {
   return (
-    <div style={{ height: '100vh', width: '100vw', margin: 0 }}>
-      <img 
-      src={`${process.env.PUBLIC_URL}/Imagens/Construcao.jpg`} 
-      alt="Em construção" 
-      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-      />
-    </div>
+    <BrowserRouter>
+      <UserProvider>
+        <Routes />
+      </UserProvider>
+    </BrowserRouter>
   );
 }
 
