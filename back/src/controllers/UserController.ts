@@ -4,7 +4,6 @@ import bcrypt from 'bcrypt';
 import { calculateClassification } from "../services/userServices";
 
 class UserController {
-
     
     public async create(req: Request, res: Response): Promise<Response> {
         const { name, mail, password, idade, peso, altura, genero, nivelAtividade, objetivoDieta, pesoAlvo } = req.body;
@@ -19,7 +18,7 @@ class UserController {
                 return res.status(400).json({ message: "Data de nascimento inválida" });
             }
     
-            const classificacao = await calculateClassification(peso, birthDate, genero);
+            const { classificacao, pesoIdeal } = await calculateClassification(peso, birthDate, genero);
     
             const document = new User({
                 name,
@@ -32,25 +31,31 @@ class UserController {
                 nivelAtividade,
                 objetivoDieta,
                 pesoAlvo,
-                classificacao
+                classificacao // Aqui `classificacao` é uma string
             });
     
             const response = await document.save();
-            return res.status(201).json({ message: "Usuário criado com sucesso!", data: response });
+            
+            // Enviar resposta com detalhes
+            return res.status(201).json({ 
+                message: "Usuário criado com sucesso!", 
+                data: response,
+                classificacao,
+                pesoIdeal // Envia peso ideal, incluindo mínimo e máximo
+            });
     
         } catch (error: any) {
             console.error("Erro ao criar usuário:", error);
             return res.status(500).json({ message: "Erro ao criar usuário", error: error.message });
         }
     }
-   
+    
     public async list(req: Request, res: Response): Promise<Response> {
-        const { name, mail, password, idade, peso, altura, genero } = req.body; 
         try {
-            const objects = await User.find({ name, mail, password, idade, peso, altura, genero }).sort({ name: "asc" });
+            const objects = await User.find().sort({ name: "asc" });
             return res.json(objects);
         } catch (error: any) {
-            return res.json({ message: error.message });
+            return res.status(500).json({ message: error.message });
         }
     }
 
@@ -64,7 +69,7 @@ class UserController {
                 return res.json({ message: "Registro inexistente" });
             }
         } catch (error: any) {
-            return res.json({ message: error.message });
+            return res.status(500).json({ message: error.message });
         }
     }
 
@@ -74,23 +79,16 @@ class UserController {
     
         _id = _id.replace(/^:/, '');
     
-        console.log("ID recebido:", _id);
-        console.log("Dados recebidos:", { name, mail, password, peso, altura, genero, idade });
-    
         try {
             const document = await User.findById(_id);
-            console.log("Documento encontrado:", document);
     
             if (!document) {
-                console.log("Usuário inexistente");
                 return res.status(404).json({ message: "Usuário inexistente." });
             }
     
             const existingUser = await User.findOne({ mail });
-            console.log("Usuário com o mesmo e-mail encontrado:", existingUser);
     
             if (existingUser && existingUser.id !== _id) {
-                console.log("E-mail já em uso por outro usuário.");
                 return res.status(400).json({ message: "Este e-mail já está em uso." });
             }
     
@@ -98,7 +96,6 @@ class UserController {
             document.mail = mail || document.mail;
     
             if (password) {
-                console.log("Atualizando senha...");
                 const salt = await bcrypt.genSalt(10);
                 document.password = await bcrypt.hash(password, salt);
             }
@@ -116,32 +113,23 @@ class UserController {
                 document.idade = idadeFormatada;
             }
             
-        const classificacao = await calculateClassification(document.peso, document.idade, document.genero);
-        document.classificacao = classificacao; 
+            // Atualiza a classificação
+            const classificacao = await calculateClassification(peso, document.idade, document.genero);
+            document.classificacao = classificacao.classificacao;
+             
 
-            console.log("Documento após atualização:", document);
-            
             const resp = await document.save();
-            console.log("Documento salvo:", resp);
     
             return res.status(200).json({ message: "Perfil atualizado com sucesso.", user: resp });
     
         } catch (error: any) {
-            console.error("Erro ao atualizar perfil:", error);
-    
             if (error.code === 11000) {
-                console.log("Erro de duplicidade de e-mail");
                 return res.status(400).json({ message: "Este e-mail já está em uso." });
-            } else if (error.errors && error.errors["name"]) {
-                console.log("Erro de validação de nome:", error.errors["name"].message);
-                return res.status(400).json({ message: error.errors["name"].message });
             }
     
-            // Erro genérico
             return res.status(500).json({ message: "Erro ao atualizar perfil.", error: error.message });
         }
     }
-    
 }
 
 export default new UserController();

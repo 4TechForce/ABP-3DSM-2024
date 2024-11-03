@@ -78,4 +78,5 @@ class FoodController {
   }
 }
 
+
 export default new FoodController();
