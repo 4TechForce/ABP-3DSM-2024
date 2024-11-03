@@ -31,17 +31,17 @@ class UserController {
                 nivelAtividade,
                 objetivoDieta,
                 pesoAlvo,
-                classificacao // Aqui `classificacao` é uma string
+                classificacao 
             });
     
             const response = await document.save();
             
-            // Enviar resposta com detalhes
+            
             return res.status(201).json({ 
                 message: "Usuário criado com sucesso!", 
                 data: response,
                 classificacao,
-                pesoIdeal // Envia peso ideal, incluindo mínimo e máximo
+                pesoIdeal 
             });
     
         } catch (error: any) {
@@ -113,7 +113,7 @@ class UserController {
                 document.idade = idadeFormatada;
             }
             
-            // Atualiza a classificação
+           
             const classificacao = await calculateClassification(peso, document.idade, document.genero);
             document.classificacao = classificacao.classificacao;
              
