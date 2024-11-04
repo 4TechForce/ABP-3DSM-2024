@@ -77,7 +77,7 @@ class UserController {
         let { id: _id } = req.params;
         const { name, mail, password, peso, altura, genero, idade } = req.body;
     
-        _id = _id.replace(/^:/, '');
+        _id = _id.replace(/^/, '');
     
         try {
             const document = await User.findById(_id);

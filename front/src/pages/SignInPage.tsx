@@ -1,37 +1,50 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { Input, Button, Error } from "../components"; // Removido LinkButton já que não será necessário
-import { loadFromLocalStorage } from "../utils";
+import { Input, Button, Error } from "../components";
+import { isErrorProps, loadFromLocalStorage, saveToLocalStorage } from "../utils";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../hooks";
+import User from "../services/User"; // Supondo que User é o serviço de API para login
 
 export default function SignInPage() {
   const [mail, setMail] = useState("");
   const [password, setPassword] = useState("");
-  const { token, setToken, login, error, setError } = useUser();
+  const { token, setToken, error, setError } = useUser();
   const navigate = useNavigate();
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!mail) {
       setError({ error: "Forneça o e-mail" });
     } else if (!password) {
       setError({ error: "Forneça a senha" });
     } else {
-      login(mail, password);
+      try {
+        const response = await User.login(mail, password);
+        
+        if (isErrorProps(response)) {
+          setError(response);
+        } else {
+          setError(null);
+          setToken(response); // Define o token no estado do usuário
+          saveToLocalStorage("user", response); // Salva o token no localStorage
+          navigate("/"); // Redireciona após login bem-sucedido
+        }
+      } catch (err) {
+        setError({ error: "Erro no servidor. Tente novamente." });
+      }
     }
   };
 
   const handleClickCadastro = () => {
-    navigate("/cadastro"); // Função de navegação para cadastro
+    navigate("/cadastro");
   };
 
   const handleRecuperaSenha = () => {
-    navigate("/reset-password"); // Função de navegação para recuperação de senha
+    navigate("/reset-password");
   };
 
   useEffect(() => {
     if (!token) {
-      // O usuário será redirecionado para a página de login se ele entrar por alguma outra rota
       const user = loadFromLocalStorage("user");
       if (user) {
         setToken(user);
@@ -73,7 +86,6 @@ export default function SignInPage() {
             setValue={setMail}
             placeholder="Entre com seu e-mail"
           />
-
           <Input
             type="password"
             id="password"
@@ -96,6 +108,8 @@ export default function SignInPage() {
     </Wrapper>
   );
 }
+
+// Estilos
 
 const Wrapper = styled.div`
   display: flex;
@@ -183,22 +197,19 @@ const Entrada = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
-  opacity: 1;
   font-family: sans-serif;
 
   input {
     border-radius: 50px;
-    border: 1px solid var(--Border-Primary, #dae3e9);
+    border: 1px solid #dae3e9;
     display: flex;
-    padding: var(--Totalitems, 10px) var(--Padding, 16px);
+    padding: 10px 16px;
     align-items: center;
     gap: 120px;
-    align-self: stretch;
   }
 
   input::placeholder {
     color: #868c95;
-    font-family: sans-serif;
     font-size: 0.8rem;
   }
 

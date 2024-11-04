@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styled, { createGlobalStyle } from "styled-components";
-import { Input, Error, LinkButton } from "../components";
+import {  Error} from "../components";
 import { useUser } from "../hooks";
 import confetti from 'canvas-confetti';
 import { useNavigate } from 'react-router-dom'; // Importação para navegação
@@ -166,29 +166,29 @@ export default function SignUpPage() {
           </FormGroup>
         </Container>
         <Container1>
-          <Title1>Meu Objetivo</Title1>
-          <FormGroup1>
-            <label>Objetivo da Dieta</label>
-            <select
-              value={objetivoDieta}
-              onChange={(e) => setObjetivoDieta(e.target.value)}
-            >
-              <option value="">Selecione</option>
-              <option value="Perder peso">Perder peso</option>
-              <option value="Manter peso">Manter peso</option>
-              <option value="Ganhar peso">Ganhar peso</option>
-            </select>
-          </FormGroup1>
-          <FormGroup1>
-            <label>Peso alvo (kg)</label>
-            <input
-              className="entrada"
-              type="number"
-              value={pesoAlvo || ""}
-              onChange={(e) => setPesoAlvo(Number(e.target.value))}
-            />
-          </FormGroup1>
-        </Container1>
+  <Title1>Meu Objetivo</Title1>
+  <FormGroup1>
+    <label>Objetivo da Dieta</label>
+    <select
+      value={objetivoDieta}
+      onChange={(e) => setObjetivoDieta(e.target.value)}
+    >
+      <option value="">Selecione</option>
+      <option value="Perder peso">Perder peso</option>
+      <option value="Manter peso">Manter peso</option>
+      <option value="Ganhar peso">Ganhar peso</option>
+    </select>
+  </FormGroup1>
+  <FormGroup1>
+    <label>Peso alvo (kg)</label>
+    <input
+      className="entrada"
+      type="number"
+      value={pesoAlvo || ""}
+      onChange={(e) => setPesoAlvo(Number(e.target.value))}
+    />
+  </FormGroup1>
+</Container1>
         <Container2>
           <Title2>Meu Perfil</Title2>
           <FormGroup2>
@@ -200,19 +200,19 @@ export default function SignUpPage() {
             />
           </FormGroup2>
           <FormGroup2>
-            <label>Senha</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </FormGroup2>
-          <FormGroup2>
             <label>E-mail</label>
             <input
               type="email"
               value={mail}
               onChange={(e) => setMail(e.target.value)}
+            />
+          </FormGroup2>
+          <FormGroup2>
+            <label>Senha</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
           </FormGroup2>
         </Container2>
@@ -238,13 +238,11 @@ const Success = styled.div`
 
 
 const Wrapper = styled.div`
-  width: 100vw;
-  height: 100vh;
-  background-color: #f6f6f6;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  padding: 20px;
 `;
-
 const Header = styled.header`
   width: 100%;
   padding: 10px;
@@ -258,8 +256,7 @@ const Header = styled.header`
 
 
 const Logo = styled.img`
-  width: 200px; /* Ajustar conforme necessário */
-  height: auto;
+  width: 200px;
 `;
 
 const Content = styled.div`
@@ -307,8 +304,8 @@ box-shadow: 0px 16px 25px -6px rgba(246, 0, 148, 0.15);
 const Container = styled.div`
   border-radius: 39px;
   background: var(--CoresPrincipais-Background-Secundrio, #FFF);
-  width: 1500px;
-  height: 627px;
+  width: 95vw;
+  height: 500px;
   padding: 20px;
   flex-shrink: 0;
 `;
@@ -347,8 +344,12 @@ const FormGroup = styled.div`
 `;
 
 const RadioGroup = styled.div`
-  display: flex;
+   display: flex;
   gap: 10px;
+
+  input {
+    margin-right: 5px;
+  }
 `;
 
 const GlobalStyle = createGlobalStyle`
@@ -365,41 +366,50 @@ const GlobalStyle = createGlobalStyle`
 
 // meu objetivo
 const Container1 = styled.div`
+  border-radius: 39px;
+  background: var(--CoresPrincipais-Background-Secundrio, #FFF);
+  width: 95vw;
+  height: auto; /* Muda para auto para se ajustar ao conteúdo */
   padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  background-color: #fff;
+  flex-shrink: 0;
 `;
 
+// Título acima dos inputs
 const Title1 = styled.h2`
   font-size: 1.5rem;
   margin-bottom: 10px;
 `;
 
+// Usar um novo FormGroup para cada input
 const FormGroup1 = styled.div`
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 
   label {
     display: block;
     margin-bottom: 5px;
   }
 
-  select {
-    width: 100%;
-    padding: 8px;
-    font-size: 1rem;
-    border-radius: 5px;
-    border: 1px solid #ccc;
+  input {
+    display: flex;
+    width: 230px;
+    padding: var(--Totalitems, 10px) var(--Padding, 16px);
+    justify-content: space-between;
+    align-items: center;
+    border-radius: var(--Totalitems, 10px);
+    border: 1px solid var(--Border-Primary, #DAE3E9);
   }
 `;
 
 
+
 // meuperfil
 const Container2 = styled.div`
+  border-radius: 39px;
+  background: var(--CoresPrincipais-Background-Secundrio, #FFF);
+  width: 95vw;
+  height: 40vh;
   padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  background-color: #fff;
+  flex-shrink: 0;
 `;
 
 const Title2 = styled.h2`
@@ -408,7 +418,7 @@ const Title2 = styled.h2`
 `;
 
 const FormGroup2 = styled.div`
-  margin-bottom: 15px;
+    margin-bottom: 20px;
 
   label {
     display: block;
@@ -416,11 +426,13 @@ const FormGroup2 = styled.div`
   }
 
   input {
-    width: 100%;
-    padding: 8px;
-    font-size: 1rem;
-    border-radius: 5px;
-    border: 1px solid #ccc;
+    display: flex;
+    width: 230px;
+    padding: var(--Totalitems, 10px) var(--Padding, 16px);
+    justify-content: space-between;
+    align-items: center;
+    border-radius: var(--Totalitems, 10px);
+    border: 1px solid var(--Border-Primary, #DAE3E9);
   }
 `;
 

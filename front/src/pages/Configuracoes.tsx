@@ -1,94 +1,152 @@
-import React, { useState, useContext } from 'react';
-import { UserContext } from '../contexts/UserContext';
+import { useEffect, useState } from "react";
+import styled from "styled-components";
+import { Input, Button, Error, PopupMessage } from "../components";
+import { useUser } from "../hooks";
 
-const Configuracoes: React.FC = () => {
-    const { token, updateMail, updatePassword, setError } = useContext(UserContext)!; // Acesse o UserContext
-    const [email, setEmail] = useState('');
-    const [senha, setSenha] = useState('');
-    const [peso, setPeso] = useState('');
-    const [altura, setAltura] = useState('');
-    const [genero, setGenero] = useState('');
-    const [idade, setIdade] = useState('');
-    const [mensagem, setMensagem] = useState('');
+export default function SettingsPage() {
+  const { token, updateAlias, updateMail, updatePassword, error, setError } = useUser();
+  const [alias, setAlias] = useState("");
+  const [mail, setMail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPopup, setShowPopup] = useState(false);
+  const [messagePopup, setMessagePopup] = useState("");
 
-    const handleAtualizar = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setMensagem('');
-    
-        if (!email && !senha && !peso && !altura && !genero && !idade) {
-            setMensagem('Por favor, preencha ao menos um campo para atualizar.');
-            return;
-        }
-    
-        try {
-            if (email) {
-                const emailUpdated = await updateMail(email);
-                if (!emailUpdated) {
-                    setMensagem('Erro ao atualizar o e-mail.');
-                    return;
-                }
-            }
-    
-            if (senha) {
-                const senhaUpdated = await updatePassword(senha);
-                if (!senhaUpdated) {
-                    setMensagem('Erro ao atualizar a senha.');
-                    return;
-                }
-            }
-    
-    
-            setMensagem('Informações atualizadas com sucesso!');
-        } catch (error) {
-            console.error('Erro ao atualizar informações:', error);
-            setMensagem('Ocorreu um erro ao atualizar as informações. Tente novamente.');
-        }
-    };
-    
+  useEffect(() => {
+    if (token && token.alias && token.mail) {
+      setAlias(token.alias);
+      setMail(token.mail);
+    }
+  }, [token]);
 
-    return (
-        <form onSubmit={handleAtualizar}>
-            <h2>Atualizar Informações</h2>
-            <input
-                type="email"
-                placeholder="Novo E-mail"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-            />
-            <input
-                type="password"
-                placeholder="Nova Senha"
-                value={senha}
-                onChange={(e) => setSenha(e.target.value)}
-            />
-            <input
-                type="text"
-                placeholder="Novo Peso"
-                value={peso}
-                onChange={(e) => setPeso(e.target.value)}
-            />
-            <input
-                type="text"
-                placeholder="Nova Altura"
-                value={altura}
-                onChange={(e) => setAltura(e.target.value)}
-            />
-            <input
-                type="text"
-                placeholder="Gênero"
-                value={genero}
-                onChange={(e) => setGenero(e.target.value)}
-            />
-            <input
-                type="text"
-                placeholder="Idade (dd/mm/yyyy)"
-                value={idade}
-                onChange={(e) => setIdade(e.target.value)}
-            />
-            <button type="submit">Atualizar</button>
-            {mensagem && <p>{mensagem}</p>}
-        </form>
-    );
-};
+  const handleAlias = async () => {
+    if (!alias) {
+      setError({ error: "Forneça o novo nome de usuário" });
+    } else if (alias === token?.alias) {
+      setError({ error: "O novo nome de usuário precisa ser diferente" });
+    } else {
+      const response = await updateAlias(alias);
+      if( response ){
+        setMessagePopup("Nome de usuário atualizado com sucesso");
+        setShowPopup(true);
+      }
+    }
+  };
 
-export default Configuracoes;
+  const handleMail = async () => {
+    if (!mail) {
+      setError({ error: "Forneça o novo e-mail" });
+    } else if (mail === token?.mail) {
+      setError({ error: "O novo e-mail precisa ser diferente" });
+    } else {
+      const response = await updateMail(mail);
+      if( response ){
+        setMessagePopup("e-mail atualizado com sucesso");
+        setShowPopup(true);
+      }
+    }
+  };
+
+  const handlePassword = async () => {
+    if (!password || password.trim().length === 0) {
+      setError({ error: "Forneça a nova senha" });
+    } else if (password.trim() !== confirmPassword.trim()) {
+      setError({ error: "A nova senha e confirmação precisam ser iguais" });
+    } else {
+      const response = await updatePassword(password.trim());
+      if( response ){
+        setMessagePopup("Senha atualizada com sucesso");
+        setShowPopup(true);
+      }
+    }
+  };
+
+  return (
+    <Wrapper>
+      {error && <Error>{error.error}</Error>}
+      {showPopup && <PopupMessage message={messagePopup} setShowPopup={setShowPopup} />}
+      <FieldWrapper>
+        
+        <TextSld>Configurações</TextSld>
+        <Input
+          type="text"
+          id="alias"
+          label="Nome de usuário"
+          value={alias}
+          setValue={setAlias}
+        />
+        <LineSld>
+          <Button label="Alterar nome de usuário" click={handleAlias} />
+        </LineSld>
+        <DivSld />
+        <Input
+          type="text"
+          id="mail"
+          label="e-mail"
+          value={mail}
+          setValue={setMail}
+        />
+        <LineSld>
+          <Button label="Alterar e-mail" click={handleMail} />
+        </LineSld>
+        <DivSld />
+        <Input
+          type="password"
+          id="password"
+          label="Nova senha"
+          value={password}
+          setValue={setPassword}
+        />
+        <Input
+          type="password"
+          id="confirmpassword"
+          label="Confirmação da nova senha"
+          value={confirmPassword}
+          setValue={setConfirmPassword}
+        />
+        <LineSld>
+          <Button label="Alterar senha" click={handlePassword} />
+        </LineSld>
+      </FieldWrapper>
+    </Wrapper>
+  );
+}
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  box-sizing: border-box;
+`;
+
+const LineSld = styled.div`
+  display: flex;
+  margin-top: 10px;
+`;
+
+const TextSld = styled.div`
+  display: flex;
+  font-size: 120%;
+  font-weight: bold;
+  color: #333;
+  margin: 10px 0px;
+`;
+
+const FieldWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 500px;
+  align-self: center;
+  margin-top: auto;
+  margin-bottom: auto;
+  padding: 20px;
+  border: 1px solid #999;
+  border-radius: 5px;
+  box-sizing: border-box;
+`;
+
+const DivSld = styled.div`
+  display: flex;
+  border-top: 1px solid #aaa;
+  margin-top: 20px;
+`;

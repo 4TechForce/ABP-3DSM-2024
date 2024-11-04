@@ -62,6 +62,7 @@ export function UserProvider({ children }: ProviderProps) {
     }
   };
 
+
   const logout = () => {
     setError(null);
     setToken(null);
@@ -70,22 +71,29 @@ export function UserProvider({ children }: ProviderProps) {
   };
 
   const updateAlias = async (alias: string): Promise<boolean> => {
-    const response = await User.updateAlias(alias);
+    const userId = localStorage.getItem("userId");
+
+    if (!userId) {
+        setError({ error: "User ID não encontrado." });
+        return false;
+    }
+
+    const response = await User.updateAlias(userId, alias); // Passando o userId aqui
 
     if (isErrorProps(response)) {
-      setError(response);
-      return false;
+        setError(response);
+        return false;
     } else {
-      setError(null);
-      if (token) {
-        const temp = { ...token };
-        temp.alias = alias;
-        setToken(temp);
-        saveToLocalStorage("user", temp);
-      }
-      return true;
+        setError(null);
+        // Aqui você pode atualizar o alias no objeto do usuário
+        const user = JSON.parse(localStorage.getItem("user") || '{}'); // Obtendo o usuário do localStorage
+
+        user.alias = alias; // Atualizando o alias
+        saveToLocalStorage("user", user); // Salvando o usuário atualizado no localStorage
+
+        return true;
     }
-  };
+};
 
   const updateMail = async (mail: string): Promise<boolean> => {
     const response = await User.updateMail(mail);

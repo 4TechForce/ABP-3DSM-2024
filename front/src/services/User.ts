@@ -19,19 +19,18 @@ class User {
       return error;
     }
   }
-
-  async updateAlias(alias:string): Promise<UserProps | ErrorProps> {
+  async updateAlias(userId: string, alias: string): Promise<UserProps | ErrorProps> {
     try {
-      const { data } = await api.put("/user/alias", { alias });
-      return data;
+        const { data } = await api.put(`/user/profile/${userId}`, { alias });
+        return data;
     } catch (error: any) {
-      return error;
+        return error;
     }
-  }
+}
 
   async updateMail(mail:string): Promise<UserProps | ErrorProps> {
     try {
-      const { data } = await api.put("/user/mail", { mail });
+      const { data } = await api.put("/user/profile", { mail });
       return data;
     } catch (error: any) {
       return error;
@@ -40,7 +39,7 @@ class User {
 
   async updatePassword(password:string): Promise<UserProps | ErrorProps> {
     try {
-      const { data } = await api.put("/user/password", { password });
+      const { data } = await api.put("/user/profile", { password });
       return data;
     } catch (error: any) {
       return error;
