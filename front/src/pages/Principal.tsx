@@ -17,19 +17,19 @@ const Principal: React.FC = () => {
   const [query, setQuery] = useState("");
   const [searchResults, setSearchResults] = useState<Meal[]>([]);
   const [selectedMeals, setSelectedMeals] = useState<Meal[]>([]);
-  const [mealType, setMealType] = useState("CafeDaManha"); // Tipo de refeição
-  const [dropdownVisible, setDropdownVisible] = useState(false); // Controla a visibilidade do dropdown
-  const [plateImage, setPlateImage] = useState<string>('path/to/empty-plate.png'); // Caminho da imagem do prato
+  const [mealType, setMealType] = useState("CafeDaManha");
+  const [dropdownVisible, setDropdownVisible] = useState(false);
+  const [plateImage, setPlateImage] = useState<string>(`${process.env.PUBLIC_URL}/Imagens/vazia.png`);
   const navigate = useNavigate();
 
   // Função para buscar alimentos
   const fetchMeals = async () => {
     if (!query) {
-      setDropdownVisible(false); // Esconde o dropdown se o campo de busca estiver vazio
+      setDropdownVisible(false);
       return;
     }
 
-    setDropdownVisible(true); // Exibe o dropdown quando houver texto no input
+    setDropdownVisible(true);
 
     try {
       const response = await fetch(`http://localhost:3001/food/group?q=${query}`);
@@ -51,23 +51,29 @@ const Principal: React.FC = () => {
     fetchMeals();
   }, [query]);
 
+  // Verifica o estado do prato quando as refeições selecionadas mudam
+  useEffect(() => {
+    checkPlateCondition(selectedMeals); // Verifica a condição do prato sempre que selectedMeals é atualizado
+  }, [selectedMeals]);
+
   const checkPlateCondition = (selectedMeals: Meal[]) => {
     const hasEnergetico = selectedMeals.some((meal) => meal.grupo === 'Energéticos');
     const hasConstrutor = selectedMeals.some((meal) => meal.grupo === 'Construtores');
     const hasRegulador = selectedMeals.some((meal) => meal.grupo === 'Reguladores');
-  
+
     console.log("Has Energetico:", hasEnergetico);
     console.log("Has Construtor:", hasConstrutor);
     console.log("Has Regulador:", hasRegulador);
-  
-    if (hasEnergetico && hasConstrutor && hasRegulador) {
-      setPlateImage('../Imagens/Completo.png'); // Imagem do prato completo
+
+    if (selectedMeals.length === 0) {
+      setPlateImage(`${process.env.PUBLIC_URL}/Imagens/vazia.png`); // Imagem para prato vazio
+    } else if (hasEnergetico && hasConstrutor && hasRegulador) {
+      setPlateImage(`${process.env.PUBLIC_URL}/Imagens/Completa.png`); // Imagem para prato completo
     } else {
-      setPlateImage('../Imagens/Incompleto.png'); // Imagem do prato incompleto
+      setPlateImage(`${process.env.PUBLIC_URL}/Imagens/Incompleto.png`); // Imagem para prato incompleto
     }
   };
-  
-  
+
   const handleAddMeal = (meal: Meal) => {
     const updatedMeal = {
       DESCRICAO_ALIMENTO: meal.descricao,
@@ -75,21 +81,9 @@ const Principal: React.FC = () => {
       grupo: meal.grupo,
       descricao: meal.descricao,
     };
-    const updatedMeals = [...selectedMeals, updatedMeal];
-    setSelectedMeals(updatedMeals);
-  
-    // Log para verificar o tipo de alimento
-    console.log("Tipo de alimento selecionado:", meal.tipo_alimento);
-    console.log("Grupo de alimento:", meal.grupo);  // Log do grupo do alimento
-  
-    // Chama checkPlateCondition após a atualização do estado
-    setTimeout(() => {
-      checkPlateCondition(updatedMeals);
-    }, 0);
-  
-    setDropdownVisible(false); // Esconde o dropdown quando um item é selecionado
+    setSelectedMeals((prevMeals) => [...prevMeals, updatedMeal]);
+    setDropdownVisible(false);
   };
-  
 
   const handleSaveMeals = async () => {
     try {
@@ -112,7 +106,6 @@ const Principal: React.FC = () => {
     }
   };
 
-  // Navegação
   const handleLogout = () => navigate('/logout');
   const handleHistoricoClick = () => navigate('/refeicoes');
   const handleAlimentosClick = () => navigate('/alimentos');
@@ -146,8 +139,7 @@ const Principal: React.FC = () => {
       <Layout>
         <h1>Adicionar Alimento ao Histórico</h1>
 
-        {/* Imagem do prato */}
-        <PlateImage src={"../Imagens/vazio.png"} alt="Prato" />
+        <PlateImage src={plateImage} alt="Prato" />
 
         <Input
           placeholder="Digite o nome do alimento"
@@ -246,46 +238,38 @@ const NavButton = styled.button<{ active?: boolean }>`
 
 const IconContainer = styled.div<{ color: string }>`
   background-color: ${({ color }) => color};
-  border-radius: 50%;
   padding: 10px;
-`;
-
-const PlateImage = styled.img`
-  width: 100%;
-  max-width: 400px;
-  height: auto;
-  margin: 20px 0;
-  border-radius: 8px;
-  transition: opacity 0.3s ease-in-out;
+  border-radius: 50%;
 `;
 
 const Input = styled.input`
   width: 100%;
   padding: 12px;
-  margin-bottom: 10px;
-  border-radius: 8px;
+  margin: 10px 0;
+  border-radius: 5px;
   border: 1px solid #ccc;
 `;
 
 const SelectMealType = styled.select`
-  padding: 10px;
-  margin-bottom: 20px;
   width: 100%;
-  border-radius: 8px;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 5px;
   border: 1px solid #ccc;
 `;
 
 const SearchResults = styled.div`
-  margin-top: 10px;
   max-height: 200px;
   overflow-y: auto;
   border: 1px solid #ccc;
-  border-radius: 8px;
+  margin-top: 10px;
 `;
 
 const ResultItem = styled.div`
   padding: 10px;
   cursor: pointer;
+  transition: background-color 0.3s;
+
   &:hover {
     background-color: #f1f1f1;
   }
@@ -296,19 +280,26 @@ const SelectedMeals = styled.div`
 `;
 
 const SaveButton = styled.button`
-  padding: 10px 20px;
-  background-color: #007bff;
+  padding: 12px 20px;
+  background-color: #28a745;
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 5px;
   cursor: pointer;
-  font-size: 16px;
   width: 100%;
-  margin-top: 20px;
+  font-size: 16px;
 
   &:hover {
-    background-color: #0056b3;
+    background-color: #218838;
   }
+`;
+
+const PlateImage = styled.img`
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  margin: 20px auto;
+  display: block;
 `;
 
 export default Principal;

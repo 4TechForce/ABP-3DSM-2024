@@ -5,11 +5,9 @@ import ResetPassword from "../pages/Editar";
 import Principal from "../pages/Principal";
 import Configuracoes from "../pages/Configuracoes";
 import Alimentos from "../pages/Alimentos";
-import PratoComponent from "../pages/Prato";
 import CalorieProgress from "../pages/Refeicoes";
 import UpdateUserForm from "../pages/UpdateUserForm";
 import { AuthProvider } from "../contexts/AuthContext";
-import UserHistory from "../pages/Informacoes";
 import HistoricoRefeicoes from "../pages/Refeicoes";
 
 export default function UserRoutes() {
@@ -21,7 +19,6 @@ export default function UserRoutes() {
         <Route path="/profile/update/:id" element={<UpdateUserForm />} />
         <Route path="/configuracoes" element={<Configuracoes/>} />
         <Route path="/alimentos" element={<Alimentos />} />
-        <Route path="/prato" element={<PratoComponent />} />
         <Route path="/*" element={<NotFoundPage />} />
         <Route path="/logout" element={<Logout />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
