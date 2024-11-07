@@ -1,47 +1,49 @@
 import React, { useState, useEffect } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
-import { FaInfoCircle, FaHistory, FaUserAlt, FaAppleAlt } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import Header from '../components/Header';
 import { useAuth } from '../contexts/AuthContext';
+import Header from '../components/Header';
+import { FaHistory, FaAppleAlt, FaInfoCircle } from 'react-icons/fa';
 
-// Interface para refeição
 interface Meal {
-  descricao: string; // Alimento
-  tipo_alimento: string; // Tipo de alimento
-  grupo: string; // Grupo do alimento
+  descricao: string;
+  tipo_alimento: string;
+  grupo: string;
+  DESCRICAO_ALIMENTO?: string;
 }
 
-// Componente principal
 const Principal: React.FC = () => {
   const { userId } = useAuth();
-  const [name, setName] = useState('');
-  const [mail, setMail] = useState('');
-  const [password, setPassword] = useState('');
-  const [query, setQuery] = useState('');
-  const [groupedMeals, setGroupedMeals] = useState<{ [key: string]: Meal[] }>({});
-  const [showConfigModal, setShowConfigModal] = useState(false);
+  const [query, setQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<Meal[]>([]);
+  const [selectedMeals, setSelectedMeals] = useState<Meal[]>([]);
+  const [mealType, setMealType] = useState("CafeDaManha"); // Tipo de refeição
+  const [dropdownVisible, setDropdownVisible] = useState(false); // Controla a visibilidade do dropdown
+  const [plateImage, setPlateImage] = useState<string>('path/to/empty-plate.png'); // Caminho da imagem do prato
   const navigate = useNavigate();
 
-  // Função para buscar dados da API
+  // Função para buscar alimentos
   const fetchMeals = async () => {
+    if (!query) {
+      setDropdownVisible(false); // Esconde o dropdown se o campo de busca estiver vazio
+      return;
+    }
+
+    setDropdownVisible(true); // Exibe o dropdown quando houver texto no input
+
     try {
       const response = await fetch(`http://localhost:3001/food/group?q=${query}`);
       const data = await response.json();
 
-      // Agrupar as refeições pelo tipo
-      const grouped = data.reduce((acc: { [key: string]: Meal[] }, meal: Meal) => {
-        const { grupo } = meal;
-        if (!acc[grupo]) {
-          acc[grupo] = [];
-        }
-        acc[grupo].push(meal);
-        return acc;
-      }, {});
-
-      setGroupedMeals(grouped);
+      if (Array.isArray(data)) {
+        setSearchResults(data);
+      } else {
+        console.error("Resposta inesperada da API:", data);
+        setSearchResults([]);
+      }
     } catch (error) {
       console.error('Erro ao buscar as refeições:', error);
+      setSearchResults([]);
     }
   };
 
@@ -49,145 +51,164 @@ const Principal: React.FC = () => {
     fetchMeals();
   }, [query]);
 
-  // Funções para navegação
-  const handleLogout = () => {
-    navigate("/logout");
-  };
-
-  const handleHistoricoClick = () => {
-    navigate('/historico');
-  };
-
-  const handleAlimentosClick = () => {
-    navigate('/alimentos');
-  };
-
-  const handleInformacoesClick = () => {
-    navigate('/informacoes');
-  };
-
-  // Função para abrir/fechar o modal de configurações
-  const toggleConfigModal = () => setShowConfigModal(!showConfigModal);
-
-  // Função para salvar as configurações no banco de dados
-  const handleSaveConfig = async () => {
-    if (!userId) {
-      alert("ID do usuário não está definido.");
-      return;
+  const checkPlateCondition = (selectedMeals: Meal[]) => {
+    const hasEnergetico = selectedMeals.some((meal) => meal.grupo === 'Energéticos');
+    const hasConstrutor = selectedMeals.some((meal) => meal.grupo === 'Construtores');
+    const hasRegulador = selectedMeals.some((meal) => meal.grupo === 'Reguladores');
+  
+    console.log("Has Energetico:", hasEnergetico);
+    console.log("Has Construtor:", hasConstrutor);
+    console.log("Has Regulador:", hasRegulador);
+  
+    if (hasEnergetico && hasConstrutor && hasRegulador) {
+      setPlateImage('../Imagens/Completo.png'); // Imagem do prato completo
+    } else {
+      setPlateImage('../Imagens/Incompleto.png'); // Imagem do prato incompleto
     }
+  };
+  
+  
+  const handleAddMeal = (meal: Meal) => {
+    const updatedMeal = {
+      DESCRICAO_ALIMENTO: meal.descricao,
+      tipo_alimento: meal.tipo_alimento,
+      grupo: meal.grupo,
+      descricao: meal.descricao,
+    };
+    const updatedMeals = [...selectedMeals, updatedMeal];
+    setSelectedMeals(updatedMeals);
+  
+    // Log para verificar o tipo de alimento
+    console.log("Tipo de alimento selecionado:", meal.tipo_alimento);
+    console.log("Grupo de alimento:", meal.grupo);  // Log do grupo do alimento
+  
+    // Chama checkPlateCondition após a atualização do estado
+    setTimeout(() => {
+      checkPlateCondition(updatedMeals);
+    }, 0);
+  
+    setDropdownVisible(false); // Esconde o dropdown quando um item é selecionado
+  };
+  
 
+  const handleSaveMeals = async () => {
     try {
-      const response = await fetch(`http://localhost:3001/user/profile/${userId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name, mail, password }),
+      const response = await fetch('http://localhost:3001/food/historico', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId,
+          refeicao: mealType,
+          alimentos: selectedMeals,
+        }),
       });
-
       if (response.ok) {
-        alert("Configurações salvas com sucesso!");
+        console.log("Refeição salva com sucesso!");
       } else {
-        alert("Erro ao salvar as configurações.");
+        console.error("Erro ao salvar refeição.");
       }
     } catch (error) {
-      console.error("Erro ao salvar as configurações:", error);
-      alert("Erro ao salvar as configurações.");
+      console.error("Erro ao salvar refeição:", error);
     }
   };
+
+  // Navegação
+  const handleLogout = () => navigate('/logout');
+  const handleHistoricoClick = () => navigate('/refeicoes');
+  const handleAlimentosClick = () => navigate('/alimentos');
+  const handleConfiguraçõesClick = () => navigate(`/profile/update/${userId}`);
 
   return (
     <>
       <GlobalStyle />
-      <Header
-        onSettingsClick={toggleConfigModal}
-        onLogoutClick={handleLogout}
-      />
-      <NavBar1>
-        <NavButton1>
-          <IconContainer1 color="#d4e4ff">
+      <Header onSettingsClick={handleConfiguraçõesClick} onLogoutClick={handleLogout} />
+      <NavBar>
+        <NavButton onClick={handleHistoricoClick}>
+          <IconContainer color="#d4e4ff">
             <FaHistory color="#007bff" size={24} />
-          </IconContainer1>
-          <span>Meu histórico</span>
-        </NavButton1>
-        <NavButton1 active onClick={handleAlimentosClick}>
-          <IconContainer1 color="#ffe4e4">
+          </IconContainer>
+          <span>Meu Histórico</span>
+        </NavButton>
+        <NavButton onClick={handleAlimentosClick}>
+          <IconContainer color="#ffe4e4">
             <FaAppleAlt color="#ff4d4d" size={24} />
-          </IconContainer1>
+          </IconContainer>
           <span>Alimentos</span>
-        </NavButton1>
-        <NavButton1>
-          <IconContainer1 color="#e4f1ff">
+        </NavButton>
+        <NavButton>
+          <IconContainer color="#e4f1ff">
             <FaInfoCircle color="#0077ff" size={24} />
-          </IconContainer1>
+          </IconContainer>
           <span>Informações</span>
-        </NavButton1>
-      </NavBar1>
+        </NavButton>
+      </NavBar>
+
       <Layout>
-        <h1>Café da Manhã</h1>
+        <h1>Adicionar Alimento ao Histórico</h1>
 
-        {/* Renderizando os alimentos agrupados em colunas */}
-        <Columns>
-  {Object.keys(groupedMeals).map((grupo) => (
-    <Column key={grupo}>
-      <h2>{grupo}</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Alimento</th>
-          </tr>
-        </thead>
-        <tbody>
-          {groupedMeals[grupo].map((meal, index) => (
-            <tr key={index}>
-              <td>{meal.descricao}</td>
-            </tr>
+        {/* Imagem do prato */}
+        <PlateImage src={"../Imagens/vazio.png"} alt="Prato" />
+
+        <Input
+          placeholder="Digite o nome do alimento"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
+
+        <SelectMealType value={mealType} onChange={(e) => setMealType(e.target.value)}>
+          <option value="CafeDaManha">Café da Manhã</option>
+          <option value="Almoco">Almoço</option>
+          <option value="CafeDaTarde">Café da Tarde</option>
+          <option value="Janta">Janta</option>
+        </SelectMealType>
+
+        {dropdownVisible && (
+          <SearchResults>
+            {Array.isArray(searchResults) && searchResults.map((meal, index) => (
+              <ResultItem key={index} onClick={() => handleAddMeal(meal)}>
+                {meal.descricao}
+              </ResultItem>
+            ))}
+          </SearchResults>
+        )}
+
+        <SelectedMeals>
+          <h2>Alimentos Selecionados</h2>
+          {selectedMeals.map((meal, index) => (
+            <div key={index}>{meal.DESCRICAO_ALIMENTO}</div>
           ))}
-        </tbody>
-      </table>
-    </Column>
-  ))}
-</Columns>
+        </SelectedMeals>
 
-        <AddButton>Adicionar +</AddButton>
+        <SaveButton onClick={handleSaveMeals}>Salvar</SaveButton>
       </Layout>
-
-      {/* Modal de Configurações */}
-      {showConfigModal && (
-        <ConfigModalOverlay>
-          <ConfigModalContent>
-            <h2>Configurações</h2>
-            <TextField
-              type="text"
-              placeholder="Nome"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-            <TextField
-              type="email"
-              placeholder="Email"
-              value={mail}
-              onChange={(e) => setMail(e.target.value)}
-            />
-            <TextField
-              type="password"
-              placeholder="Senha"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <ButtonGroup>
-              <ModalButton onClick={handleSaveConfig}>Salvar</ModalButton>
-              <ModalButton onClick={toggleConfigModal}>Cancelar</ModalButton>
-            </ButtonGroup>
-          </ConfigModalContent>
-        </ConfigModalOverlay>
-      )}
     </>
   );
 };
 
+// Estilos globais
+const GlobalStyle = createGlobalStyle`
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f2f2f2;
+  }
+`;
 
-const NavBar1 = styled.nav`
+// Estilos
+const Layout = styled.div`
+  padding: 20px;
+  max-width: 600px;
+  margin: auto;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+`;
+
+const NavBar = styled.nav`
   display: flex;
   justify-content: space-around;
   background-color: #f8f9fa;
@@ -196,7 +217,7 @@ const NavBar1 = styled.nav`
   border-radius: 8px;
 `;
 
-const NavButton1 = styled.button<{ active?: boolean }>`
+const NavButton = styled.button<{ active?: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -223,181 +244,71 @@ const NavButton1 = styled.button<{ active?: boolean }>`
   }
 `;
 
-const IconContainer1 = styled.div<{ color: string }>`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
+const IconContainer = styled.div<{ color: string }>`
   background-color: ${({ color }) => color};
-`;
-
-
-
-
-// Estilo do Modal de Configurações
-const ConfigModalOverlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-`;
-
-const ConfigModalContent = styled.div`
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  width: 300px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-`;
-
-const TextField = styled.input`
+  border-radius: 50%;
   padding: 10px;
-  border-radius: 4px;
-  border: 1px solid #ddd;
-  font-size: 16px;
 `;
 
-const ButtonGroup = styled.div`
-  display: flex;
-  justify-content: space-between;
+const PlateImage = styled.img`
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  margin: 20px 0;
+  border-radius: 8px;
+  transition: opacity 0.3s ease-in-out;
 `;
 
-const ModalButton = styled.button`
+const Input = styled.input`
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+`;
+
+const SelectMealType = styled.select`
+  padding: 10px;
+  margin-bottom: 20px;
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+`;
+
+const SearchResults = styled.div`
+  margin-top: 10px;
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+`;
+
+const ResultItem = styled.div`
+  padding: 10px;
+  cursor: pointer;
+  &:hover {
+    background-color: #f1f1f1;
+  }
+`;
+
+const SelectedMeals = styled.div`
+  margin-top: 20px;
+`;
+
+const SaveButton = styled.button`
   padding: 10px 20px;
   background-color: #007bff;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.2s;
+  font-size: 16px;
+  width: 100%;
+  margin-top: 20px;
 
   &:hover {
     background-color: #0056b3;
   }
-`;
-
-// Estilo da Tabela e Botão de Adicionar
-const Layout = styled.div`
-  padding: 20px;
-`;
-
-const Columns = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px; /* Adicionando um espaço acima das colunas */
-`;
-
-const Column = styled.div`
-  flex: 1; /* Isso faz cada coluna ocupar o mesmo espaço */
-  margin-right: 20px; /* Espaçamento entre colunas */
-  
-  &:last-child {
-    margin-right: 0; /* Remove a margem da última coluna */
-  }
-
-  h2 {
-    margin-bottom: 10px; /* Adiciona um espaçamento abaixo do título da coluna */
-    color: #333; /* Cor do texto do título */
-  }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra na tabela para destaque */
-    border-radius: 8px; /* Bordas arredondadas */
-    overflow: hidden; /* Para que as bordas arredondadas apareçam */
-  }
-
-  th, td {
-    padding: 12px; /* Mais espaço interno */
-    border: 1px solid #e0e0e0; /* Borda mais suave */
-    text-align: left;
-    transition: background-color 0.2s;
-  }
-
-  th {
-    background-color: #007bff; /* Cor de fundo dos cabeçalhos */
-    color: white; /* Cor do texto dos cabeçalhos */
-    font-weight: bold; /* Texto em negrito */
-  }
-
-  td {
-    background-color: #ffffff; /* Cor de fundo das células */
-  }
-
-  tr:hover td {
-    background-color: #f1f1f1; /* Cor de destaque ao passar o mouse */
-  }
-`;
-
-const AddButton = styled.button`
-  padding: 10px 20px;
-  background-color: #ffa500;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.2s, transform 0.2s;
-
-  &:hover {
-    background-color: #ff8c00;
-    transform: scale(1.05);
-  }
-`;
-
-// Estilo Global
-const GlobalStyle = createGlobalStyle`
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-
-  body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f2f2f2;
-  }
-`;
-
-const NavBar = styled.nav`
-  display: flex;
-  justify-content: space-around;
-  background-color: #f8f9fa;
-  padding: 20px;
-  margin-top: 20px;
-  border-radius: 8px;
-`;
-
-const NavButton = styled.button<{ active?: boolean }>`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: ${(props) => (props.active ? '#007bff' : '#333')};
-
-  span {
-    margin-top: 5px;
-  }
-`;
-
-const IconContainer = styled.div<{ color: string }>`
-  background-color: ${(props) => props.color};
-  border-radius: 50%;
-  padding: 10px;
 `;
 
 export default Principal;

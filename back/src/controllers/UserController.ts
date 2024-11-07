@@ -86,7 +86,7 @@ class UserController {
                 return res.status(404).json({ message: "Usuário inexistente." });
             }
     
-            const existingUser = await User.findOne({ mail });
+            const existingUser = await User.findOne({ _id });
     
             if (existingUser && existingUser.id !== _id) {
                 return res.status(400).json({ message: "Este e-mail já está em uso." });

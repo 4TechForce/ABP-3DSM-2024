@@ -1,5 +1,4 @@
-import mongoose from "mongoose";
-const { Schema } = mongoose;
+import mongoose, { Schema, Document } from 'mongoose';
 
 const UserSchema = new Schema({
     name: {
@@ -79,8 +78,33 @@ const UserSchema = new Schema({
 
 });
 
+
+const HistoricoRefeicaoSchema = new Schema({
+    userId: { 
+        type: Schema.Types.ObjectId,  
+        ref: 'User',                   
+        required: true 
+    },
+    refeicao: {
+        type: String,
+        required: true,
+        enum: ["CafeDaManha", "Almoco", "CafeDaTarde", "Janta"], 
+    },
+    alimentos: [
+        {
+            DESCRICAO_ALIMENTO: { type: String, required: true },
+            calorias: { type: Number, required: true },
+            proteina: { type: Number, required: true },
+            carboidratos: { type: Number, required: true },
+            gordura: { type: Number, required: true },
+        }
+    ],
+    data: { type: Date, default: Date.now },
+});
+  
+const Historico = mongoose.model("Historico", HistoricoRefeicaoSchema, "historico");
 const User = mongoose.model("User", UserSchema, "user");
 
 //const anotherDb = mongoose.connection.useDb('outroBanco');
 
-export { User };
+export { User, Historico };

@@ -13,14 +13,14 @@ class GroupController {
       'Hortaliças folhosas, frutosas e outras': 'Reguladores',
       'Frutas': 'Reguladores',
       'Sais e condimentos': 'Reguladores',
-      'Bebidas não alcoólicas e infusões':'Reguladores',
-
+      'Bebidas não alcoólicas e infusões': 'Reguladores',
+    
       'Carnes e vísceras': 'Construtores',
       'Pescados e frutos do mar': 'Construtores',
       'Carnes industrializadas': 'Construtores',
       'Laticínios': 'Construtores',
       'Aves e ovos': 'Construtores',
-      'Bebidas alcoólicas':'Construtores',
+      'Bebidas alcoólicas': 'Construtores',
       
       'Cocos, castanhas e nozes': 'Energéticos',
       'Farinhas, féculas e massas': 'Energéticos',
@@ -28,8 +28,9 @@ class GroupController {
       'Enlatados e conservas': 'Energéticos',
       'Panificados': 'Energéticos',
       'Óleos e gorduras': 'Energéticos',
-      'Miscelâneas':'Energéticos'
+      'Miscelâneas': 'Energéticos'
     };
+    
 
     try {
       const alimentosCollection = mongoose.connection.collection('alimentos');

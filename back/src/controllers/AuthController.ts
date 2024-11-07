@@ -111,8 +111,10 @@ class AuthController{
                     expiresIn: '1h',
                 });
 
-                console.log("Token gerado:", token);
-                return res.json({ token });
+                res.status(200).json({
+                    token,
+                    userId: user._id.toString(),
+                  });
             } else {
                 console.log("Email ou senha incorretos");
                 return res.status(401).json({ message: 'Email ou senha incorretos' });
