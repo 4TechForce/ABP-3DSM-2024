@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { FaUserAlt } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import logo from '../Imagens/Logo.png'
 
 // Componente de Header
 const Header: React.FC<{ onSettingsClick: () => void; onLogoutClick: () => void }> = ({ onSettingsClick, onLogoutClick }) => {
@@ -10,7 +11,7 @@ const Header: React.FC<{ onSettingsClick: () => void; onLogoutClick: () => void 
 
   return (
     <NavContainer>
-      <Logo><img src="../Imagens/Logo.png" alt="Logo" /></Logo>
+      <Logo><img src={logo} alt="Logo" /></Logo>
       <UserProfile onClick={toggleDropdown}>
         <Avatar src="https://via.placeholder.com/50" alt="Avatar" />
         <span>Usuário</span>
