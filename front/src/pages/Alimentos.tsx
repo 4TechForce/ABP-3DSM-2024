@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { FaHistory, FaAppleAlt, FaInfoCircle, FaUserAlt } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
 const FoodSearch: React.FC = () => {
+  const { userId } = useAuth();
   const [query, setQuery] = useState('');
   const [foods, setFoods] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
@@ -35,14 +37,15 @@ const FoodSearch: React.FC = () => {
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
   };
-  const handleSettingsClick = () => {
-    navigate('/configuracoes');
-  };
+  const handleConfiguraçõesClick = () => navigate(`/profile/update/${userId}`);
+
 
   const handleLogout = () => {
     navigate("/logout");
   };
-
+  const handleHistorico = () => {
+    navigate("/refeicoes");
+  };
 
   return (
     <Container>
@@ -54,7 +57,7 @@ const FoodSearch: React.FC = () => {
           <FaUserAlt size={20} />
           {dropdownOpen && (
             <DropdownMenu>
-              <DropdownItem onClick={handleSettingsClick}>Configurações</DropdownItem>
+              <DropdownItem onClick={handleConfiguraçõesClick}>Configurações</DropdownItem>
             <DropdownItem onClick={handleLogout}>Sair</DropdownItem>
             <DropdownItem>Perfil</DropdownItem>
             </DropdownMenu>
@@ -62,7 +65,7 @@ const FoodSearch: React.FC = () => {
         </UserProfile>
       </Header>
       <NavBar>
-        <NavButton>
+        <NavButton onClick={handleHistorico}>
           <IconContainer color="#d4e4ff">
             <FaHistory color="#007bff" size={24} />
           </IconContainer>

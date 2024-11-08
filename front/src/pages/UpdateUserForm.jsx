@@ -70,6 +70,18 @@ const UpdateUserForm = () => {
           alert('Erro ao atualizar usuário.');
         }
     };
+    const toggleDropdown = () => {
+      setDropdownOpen(!dropdownOpen);
+    };
+    const handleConfiguraçõesClick = () => navigate(`/profile/update/${userId}`);
+  
+  
+    const handleLogout = () => {
+      navigate("/logout");
+    };
+    const handleHistorico = () => {
+      navigate("/refeicoes");
+    };
 
     return (
         <Container>
