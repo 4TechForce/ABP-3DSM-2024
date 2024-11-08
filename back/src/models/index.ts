@@ -1,5 +1,4 @@
-import mongoose from "mongoose";
-const { Schema } = mongoose;
+import mongoose, { Schema, Document } from 'mongoose';
 
 const UserSchema = new Schema({
     name: {
@@ -27,17 +26,15 @@ const UserSchema = new Schema({
         type: String,
         trim: true,
         minlength: [6, "A senha precisa ter no mínimo 6 caracteres"],
-        maxlength: [10, "A senha precisa ter no máximo 10 caracteres"],
+        maxlength: [60, "A senha precisa ter no máximo 60 caracteres"],
         select: false,
         required: [true, "A senha é obrigatória"],
     },
 
     idade: {
-        type: Number,
-        min: [0, "A idade deve ser maior ou igual a 0"],
-        max: [100, "A idade deve ser menor ou igual a 120"],
-        required: [true, "Informe sua idade"]
-    },
+        type: Date,
+        required: [true, "Informe sua data de nascimento"]
+      },
 
     peso: {
         type: Number,
@@ -52,7 +49,62 @@ const UserSchema = new Schema({
         max: [300, "A altura deve ser menor que 300 cm"],
         required: [true, "Informe sua altura"]
     },
+
+    genero: { 
+        type: String,
+        enum: {
+          values: ['Masculino', 'Feminino'],
+          message: 'Opção inválida'
+        },
+        required: true
+      },
+
+      nivelAtividade: {
+        type: String,
+        enum: ['Sedentário', 'Moderado', 'Ativo', 'Muito Ativo'],
+        required: true,
+    },
+    objetivoDieta: {
+        type: String,
+        enum: ['Perder peso', 'Manter peso', 'Ganhar peso'],
+        required: true,
+    },
+    pesoAlvo: { type: Number, required: true },
+    classificacao: {
+        type: String,
+        enum: ['Abaixo do Peso', 'Peso Normal', 'Sobrepeso'],
+        required: true
+    }
+
 });
 
+
+const HistoricoRefeicaoSchema = new Schema({
+    userId: { 
+        type: Schema.Types.ObjectId,  
+        ref: 'User',                   
+        required: true 
+    },
+    refeicao: {
+        type: String,
+        required: true,
+        enum: ["CafeDaManha", "Almoco", "CafeDaTarde", "Janta"], 
+    },
+    alimentos: [
+        {
+            DESCRICAO_ALIMENTO: { type: String, required: true },
+            calorias: { type: Number, required: true },
+            proteina: { type: Number, required: true },
+            carboidratos: { type: Number, required: true },
+            gordura: { type: Number, required: true },
+        }
+    ],
+    data: { type: Date, default: Date.now },
+});
+  
+const Historico = mongoose.model("Historico", HistoricoRefeicaoSchema, "historico");
 const User = mongoose.model("User", UserSchema, "user");
-export { User };
+
+//const anotherDb = mongoose.connection.useDb('outroBanco');
+
+export { User, Historico };

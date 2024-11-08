@@ -1,0 +1,31 @@
+[
+{"CODIGO_TIPO":"201","DESCRICAO":"Cereais e leguminosas"},
+{"CODIGO_TIPO":"202","DESCRICAO":"Hortaliças tuberosas"}
+,
+{"CODIGO_TIPO":"203","DESCRICAO":"Farinhas, féculas e massas"}
+,
+{"CODIGO_TIPO":"204","DESCRICAO":"Cocos, castanhas e nozes"},
+{"CODIGO_TIPO":"205","DESCRICAO":"Hortaliças folhosas, frutosas e outras"}
+,
+{"CODIGO_TIPO":"206","DESCRICAO":"Frutas"},
+{"CODIGO_TIPO":"207","DESCRICAO":"Açúcares e produtos de confeitaria"}
+,
+{"CODIGO_TIPO":"208","DESCRICAO":"Sais e condimentos"},
+{"CODIGO_TIPO":"209","DESCRICAO":"Carnes e vísceras"}
+,
+{"CODIGO_TIPO":"210","DESCRICAO":"Pescados e frutos do mar"},
+{"CODIGO_TIPO":"211","DESCRICAO":"Enlatados e conservas"},
+{"CODIGO_TIPO":"212","DESCRICAO":"Aves e ovos"},
+{"CODIGO_TIPO":"213","DESCRICAO":"Laticínios"}
+,
+{"CODIGO_TIPO":"214","DESCRICAO":"Panificados"},
+{"CODIGO_TIPO":"215","DESCRICAO":"Carnes industrializadas"},
+{"CODIGO_TIPO":"216","DESCRICAO":"Bebidas não alcoólicas e infusões"}
+,
+{"CODIGO_TIPO":"217","DESCRICAO":"Bebidas alcoólicas"}
+,
+{"CODIGO_TIPO":"218","DESCRICAO":"Óleos e gorduras"}
+,
+{"CODIGO_TIPO":"219","DESCRICAO":"Miscelâneas"}
+
+]
