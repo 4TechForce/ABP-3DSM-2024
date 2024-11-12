@@ -173,6 +173,44 @@ Nós da 4TechForce propomos a criação de uma aplicação web destinada ao regi
 <br>
 <br>
 
+<h3 align="center">Sprint 3</h3>
+
+<div align="center">
+
+| Item | Funcionalidade |
+|:----:|:--------------:|
+|  1   | Tela Principal |
+|  2   | Histórico  |
+|  3   | Pesquisa de alimentos  |
+|  4   | Tela de perfil|
+
+
+
+<h3 align="center">Tarefas na Sprint</h3>
+
+| Tarefa               | Descrição da tarefa                           | Story Point |
+|:---------------------:|:---------------------------------------------:|:-----------:|
+| Item 2.1.1            | Histórico de alimentos backend       |      3      |
+| Item 2.1.2            | Curva de crescimento backend   |      3      |
+| Item 2.1.3            | Salvar alimentos por grupos de construtores, energéticos e reguladores backend                  |      3      |
+| Item 2.1.4            | Perfil frontend    |      3      |
+| Item 2.1.5            | Histórico frontend                  |      3      |
+| Item 2.1.6            | Tela interativa                 |      3      |
+| Item 2.2              | Criação do vídeo e power point para apresentação            |      2      |
+|                       | **Total Story Point**                         |     **20**  |
+
+</div>
+<br>
+<br>
+
+## Métrica do Time
+<p align="center">
+<img src="./front/assets/burndown/burndownSprint3.png">
+</p>
+<br>
+<br>
+
+
 
 ## 🚀 Tecnologias Utilizadas
 
